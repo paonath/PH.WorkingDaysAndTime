@@ -143,6 +143,31 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
         }
 
+        [TestMethod]
+        public void Add_17Hours_On_8workingHoursDay_Will_Add_2_Days_and_1h()
+        {
+            var d = new DateTime(2015, 6, 16, 9, 0, 0);
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
+            var r = utility.AddWorkingHours(d, 17);
+            var e = new DateTime(2015, 6, 18, 10, 0, 0);
+            Assert.AreEqual(e, r);
+
+        }
+
+        [TestMethod]
+        public void Add_33Hours_On_8workingHoursDay_Will_Add_3_Days_and_1h()
+        {
+            var d = new DateTime(2015, 6, 16, 9, 45, 0);
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
+            var r = utility.AddWorkingHours(d, 33);
+            var e = new DateTime(2015, 6, 22, 10, 45, 0);
+            Assert.AreEqual(e, r);
+
+        }
+
+        #region config ...
         private WeekDaySpan GetSimpleWeek()
         {
             var wts1 = new WorkTimeSpan() { Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
@@ -194,7 +219,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             };
             return week;
         }
-
+        #endregion
     }
 
 }
