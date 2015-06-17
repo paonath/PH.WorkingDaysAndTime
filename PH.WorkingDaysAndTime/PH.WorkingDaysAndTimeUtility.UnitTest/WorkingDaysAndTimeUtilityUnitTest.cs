@@ -20,7 +20,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             try
             {
                 var fake = new WeekDaySpan();
-                var utility = new WorkingDaysAndTimeUtility(fake, new List<HolyDay>());
+                var utility = new WorkingDaysAndTimeUtility(fake, new List<HoliDay>());
             }
             catch (ArgumentException ex)
             {
@@ -29,7 +29,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             try
             {
                 var fake = new WeekDaySpan() { WorkDays = new Dictionary<DayOfWeek, WorkDaySpan>() };
-                var utility = new WorkingDaysAndTimeUtility(fake, new List<HolyDay>());
+                var utility = new WorkingDaysAndTimeUtility(fake, new List<HoliDay>());
             }
             catch (ArgumentException ex)
             {
@@ -46,7 +46,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         {
             var sunday = new DateTime(2015, 6, 14);
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HolyDay>());
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             Exception f0 = null;
             try
             {
@@ -61,11 +61,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
 
         [TestMethod]
-        public void Add_1_Day_On_Simple_Week_From_2015_06_16_With_No_Holydays()
+        public void Add_1_Day_On_Simple_Week_From_2015_06_16_With_No_Holidays()
         {
             var d = new DateTime(2015, 6, 16);
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HolyDay>());
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 17);
@@ -74,11 +74,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
 
         [TestMethod]
-        public void Add_1_Day_On_Simple_Week_From_2015_06_19_With_No_Holydays()
+        public void Add_1_Day_On_Simple_Week_From_2015_06_19_With_No_Holidays()
         {
             var d = new DateTime(2015, 6, 19);
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HolyDay>());
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 22);
@@ -87,12 +87,12 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
 
         [TestMethod]
-        public void Add_1_Day_On_Simple_With_2_HolyDays()
+        public void Add_1_Day_On_Simple_With_2_HoliDays()
         {
             var d = new DateTime(2015, 6, 16);
-            var holydays = new List<HolyDay>() { new HolyDay(17, 6), new HolyDay(18, 6), new EasterMonday() };
+            var holidays = new List<HoliDay>() { new HoliDay(17, 6), new HoliDay(18, 6), new EasterMonday() };
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, holydays);
+            var utility = new WorkingDaysAndTimeUtility(weekConf, holidays);
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 19);
@@ -105,7 +105,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         {
             var d = new DateTime(2015, 6, 16, 2, 3, 4);
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HolyDay>());
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             Exception f0 = null;
             try
             {
@@ -135,7 +135,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         {
             var d = new DateTime(2015, 6, 16, 9, 0, 0);
             var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HolyDay>());
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             var r = utility.AddWorkingHours(d, 16);
             var e = new DateTime(2015, 6, 18, 9, 0, 0);
             Assert.AreEqual(e, r);

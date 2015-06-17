@@ -2,19 +2,36 @@
 
 namespace PH.WorkingDaysAndTimeUtility
 {
-    public class HolyDay
+    /// <summary>
+    /// Holiday: a non-working day.
+    /// 
+    /// This is a generic-instance, with <see cref="HoliDay.Day">Day</see> 
+    /// and <see cref="HoliDay.Month">Month</see>.
+    /// </summary>
+    public class HoliDay
     {
+        /// <summary>
+        /// Day
+        /// </summary>
         public int Day { get; private set; }
+        /// <summary>
+        /// Month
+        /// </summary>
         public int Month { get; private set; }
         
 
-        public HolyDay(int day,int mont)
+        public HoliDay(int day,int mont)
         {
             Day = day;
             Month = mont;
             
         }
 
+        /// <summary>
+        /// It returns an instance of the data by year provided
+        /// </summary>
+        /// <param name="year">year provided</param>
+        /// <returns>Holiday DateTime</returns>
         public virtual DateTime Calculate(int year)
         {
             return new DateTime(year,this.Month,this.Day);

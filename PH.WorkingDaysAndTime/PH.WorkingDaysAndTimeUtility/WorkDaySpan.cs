@@ -2,17 +2,34 @@
 
 namespace PH.WorkingDaysAndTimeUtility
 {
+    /// <summary>
+    /// Representation of a Work Day.
+    /// </summary>
     public class WorkDaySpan
     {
+        /// <summary>
+        /// Work times slices.
+        /// </summary>
         public List<WorkTimeSpan> TimeSpans { get; set; }
+
+        /// <summary>
+        /// Get Working Minutes Per Day
+        /// </summary>
         public double WorkingMinutesPerDay {
             get { return GetWorkingMinutesPerDay(); }
         }
 
+        /// <summary>
+        /// Get if working day.
+        /// </summary>
         public bool IsWorkingDay {
             get { return WorkingMinutesPerDay > (double)0; }
         }
 
+        /// <summary>
+        /// cycle working-time slices and get total minutes.
+        /// </summary>
+        /// <returns></returns>
         private double GetWorkingMinutesPerDay()
         {
             double totalMinutes = 0;

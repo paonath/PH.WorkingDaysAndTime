@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="EasterMonday.cs" />
     <Compile Include="EasterSunday.cs" />
-    <Compile Include="HolyDay.cs" />
+    <Compile Include="HoliDay.cs" />
     <Compile Include="IWorkingDaysAndTimeUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WeekDaySpan.cs" />

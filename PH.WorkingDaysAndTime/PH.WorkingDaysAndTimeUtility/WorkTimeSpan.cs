@@ -2,6 +2,9 @@
 
 namespace PH.WorkingDaysAndTimeUtility
 {
+    /// <summary>
+    /// A Slice of work-time.
+    /// </summary>
     public class WorkTimeSpan
     {
         /// <summary>

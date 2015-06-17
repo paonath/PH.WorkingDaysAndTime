@@ -6,13 +6,29 @@ using System.Threading.Tasks;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
-    public class EasterSunday : HolyDay
+    /// <summary>
+    /// Easter Sunday HoliDay 
+    /// 
+    /// As in <see cref="EasterSunday()">ctor</see> for Easter Sunday
+    /// there are no supplied parameters for day and month.
+    /// 
+    /// <see cref="http://www.codeproject.com/Articles/10860/Calculating-Christian-Holidays"/>
+    /// <seealso cref="http://www.codeproject.com/Articles/11666/Dynamic-Holiday-Date-Calculator"/>
+    /// </summary>
+    public class EasterSunday : HoliDay
     {
         public EasterSunday()
             : base(0, 0)
         {
         }
 
+        /// <summary>
+        /// Calculate Easter Sunday
+        /// 
+        /// This is the "Oskar Wieland's algorithm in C#" made by Jan Schreuder: <see cref="http://www.codeproject.com/Articles/10860/Calculating-Christian-Holidays"/>. 
+        /// </summary>
+        /// <param name="year">year provided</param>
+        /// <returns>Easter Sunday DateTime for provided year</returns>
         public override DateTime Calculate(int year)
         {
             int g = year % 19;

@@ -11,11 +11,11 @@ namespace PH.WorkingDaysAndTimeUtility
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
         private WeekDaySpan _weekDaySpan;
-        private List<HolyDay> _daysToExcludeList;
+        private List<HoliDay> _daysToExcludeList;
         
        
         public WorkingDaysAndTimeUtility(WeekDaySpan weekDaySpan
-            , List<HolyDay> daysToExcludeList
+            , List<HoliDay> daysToExcludeList
             )
         {
             CheckWeek(weekDaySpan);
@@ -38,7 +38,7 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             return end;
         }
-        public DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHolyDays)
+        public DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
         {
             CheckWorkDayStart(start);
 
@@ -49,7 +49,7 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 end = AddOneDay(end, ref toExclude);
             }
-            resultListOfHolyDays = toExclude;
+            resultListOfHoliDays = toExclude;
             return end;
         }
            
@@ -89,12 +89,19 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
-        private void P(DateTime start)
+
+        private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
+            DateTime r = start;
+            while (otherMinutes > 0)
+            {
+                r = AddOneMinute(r, ref toExclude);
+                otherMinutes--;
+            }
+            return r;
         }
 
-
-        private DateTime AddWorkingMinutes(DateTime r, double otherMinutes, List<DateTime> toExclude)
+        private DateTime AddOneMinute(DateTime r, ref List<DateTime> toExclude)
         {
             throw new NotImplementedException();
         }
