@@ -101,9 +101,75 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
-        private DateTime AddOneMinute(DateTime r, ref List<DateTime> toExclude)
+        private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
         {
-            throw new NotImplementedException();
+            DateTime r = start.AddMinutes(1);
+            
+            //check if in work-interval
+            WorkTimeSpan nextInterval;
+            bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
+            if (!isInWorkInterval)
+            {
+  
+                if (null != nextInterval)
+                {
+                    var ts = nextInterval.Start;
+                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours,ts.Minutes,ts.Seconds);
+                }
+                else
+                {
+                    r = AddOneDay(r, ref toExclude);
+                    var ts = GetFirstTimeSpanOfTheWorkingDay(r);
+                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                }
+            }
+
+            return r;
+        }
+
+        private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
+        {
+            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
+            return workDaySpan.TimeSpans
+                .OrderBy(x => x.Start).Select(x => x.Start).FirstOrDefault();
+        }
+
+        private bool CheckIfWorkTime(DateTime d, out WorkTimeSpan nextInterval)
+        {
+            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
+            bool r = false;
+            nextInterval = null;
+
+            if (null == workDaySpan)
+            {
+                
+                return false;
+            }
+            else
+            {
+                var orderdTimes = (from t in workDaySpan.TimeSpans
+                    orderby t.Start ascending, t.End ascending
+                    select t
+                    ).ToArray();
+                int counter = -1;
+                foreach (var ts in orderdTimes)
+                {
+                    counter++;
+
+                    var s = new DateTime(d.Year, d.Month, d.Day, ts.Start.Hours, ts.Start.Minutes,
+                        ts.Start.Seconds);
+                    var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
+                        ts.End.Seconds);
+                    if (s <= d && d <= e)
+                    {
+                        r = true;
+                        nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
+                        break;
+                    }
+                }
+            }
+            
+            return r;
         }
 
         private void CheckWorkDayStart(DateTime start)
