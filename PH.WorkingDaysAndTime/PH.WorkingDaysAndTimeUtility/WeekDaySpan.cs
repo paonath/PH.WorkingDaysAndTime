@@ -34,6 +34,5 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
         public Dictionary<DayOfWeek, WorkDaySpan> WorkDays { get; set; }
-        //public List<KeyValuePair<DayOfWeek, WorkDaySpan>> WorkDays { get; set; }
     }
 }

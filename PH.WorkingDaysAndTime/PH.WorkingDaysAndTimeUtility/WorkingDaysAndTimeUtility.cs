@@ -60,22 +60,39 @@ namespace PH.WorkingDaysAndTimeUtility
             DateTime r = start;
             var totMinutes = CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(start);
             List<DateTime> toExclude;
-            if (totMinutes <= hours*60 && _weekDaySpan.Symmetrical )
-            {
-                //questa cosa la devo fare solo per una settimana "simmetrica"
+            double hh = hours * 60;
 
-                double hh = hours*60;
+            if (totMinutes <= hh && _weekDaySpan.Symmetrical )
+            {
+                #region Just for "Symmetrical" week
+
+                
                 var days = (int) (hh/totMinutes);
                 var otherMinutes = hh % totMinutes;
                 r = AddWorkingDays(r, days, out toExclude);
-                r = AddWorkingMinutes(r, otherMinutes, toExclude);
-                //ancora roba da fare qui...ho il resto dei minuti
+                if (otherMinutes > (double) 0)
+                {
+                    r = AddWorkingMinutes(r, otherMinutes, toExclude);
+                }
+                
+
+                #endregion
             }
-            //ancora roba da fare qui...
-            throw new
-            NotImplementedException();
+            else
+            {
+                //calculate toExclude
+                toExclude = CalculateDaysForExclusions(start.Year);
+                r = AddWorkingMinutes(r, totMinutes, toExclude);
+
+            }
+            
             return r;
         }
+
+        private void P(DateTime start)
+        {
+        }
+
 
         private DateTime AddWorkingMinutes(DateTime r, double otherMinutes, List<DateTime> toExclude)
         {
@@ -91,25 +108,33 @@ namespace PH.WorkingDaysAndTimeUtility
             }
         }
 
-        private double CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(DateTime start)
+
+        private double GetTotalWorkingHoursForTheDay(DateTime d)
         {
-            var inError = true;
-            double ret = 0;
-            var workDaySpan = _weekDaySpan.WorkDays[start.DayOfWeek];
+            double r = (double) 0;
+            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
             workDaySpan.TimeSpans.OrderBy(x => x.Start).ToList()
                 .ForEach(ts =>
                 {
-                    var s = new DateTime(start.Year, start.Month, start.Day, ts.Start.Hours, ts.Start.Minutes,
+                    var s = new DateTime(d.Year, d.Month, d.Day, ts.Start.Hours, ts.Start.Minutes,
                         ts.Start.Seconds);
-                    var e = new DateTime(start.Year, start.Month, start.Day, ts.End.Hours, ts.End.Minutes,
+                    var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
                         ts.End.Seconds);
-                    if (s <= start && start <= e)
+                    if (s <= d && d <= e)
                     {
-                        inError = false;
-                        ret = workDaySpan.WorkingMinutesPerDay;
                         
+                        r = workDaySpan.WorkingMinutesPerDay;
+
                     }
                 });
+            return r;
+        }
+
+        private double CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(DateTime start)
+        {
+            double ret = GetTotalWorkingHoursForTheDay(start);
+            var inError = ret == (double)0;
+            
             if (inError)
             {
                 var err = "Invalid DateTime start given: give a valid time for start or check your configuration";
