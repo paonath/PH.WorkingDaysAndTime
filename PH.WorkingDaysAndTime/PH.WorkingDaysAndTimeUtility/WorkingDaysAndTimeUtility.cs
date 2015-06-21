@@ -10,18 +10,36 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
-        private WeekDaySpan _weekDaySpan;
-        private List<HoliDay> _daysToExcludeList;
+        private WeekDaySpan _workWeekConfiguration;
+        private List<HoliDay> _holidays;
         
        
-        public WorkingDaysAndTimeUtility(WeekDaySpan weekDaySpan
-            , List<HoliDay> daysToExcludeList
+        /// <summary>
+        /// Create a new instance of the utility with given configuration.
+        /// </summary>
+        /// <param name="workWeekConfiguration">work-week configuration</param>
+        /// <param name="holidays">List of holidays</param>
+        /// <exception cref="ArgumentNullException">Trown if null workWeekConfiguration</exception>
+        /// <exception cref="ArgumentException">Thrown if workWeekConfiguration without working days defined</exception>
+        public WorkingDaysAndTimeUtility(WeekDaySpan workWeekConfiguration
+            , List<HoliDay> holidays
             )
         {
-            CheckWeek(weekDaySpan);
+            if(null == workWeekConfiguration)
+                throw new ArgumentNullException("workWeekConfiguration","Week configuration mandatory");
+            try
+            {
+                CheckWeek(workWeekConfiguration);
 
-            _weekDaySpan = weekDaySpan;
-            _daysToExcludeList = daysToExcludeList;
+                _workWeekConfiguration = workWeekConfiguration;
+                _holidays = holidays;
+
+            }
+            catch (ArgumentException agEx)
+            {
+
+                throw new ArgumentException("Invalid workWeekConfiguration",agEx);
+            }
             
         }
 
@@ -60,7 +78,7 @@ namespace PH.WorkingDaysAndTimeUtility
             List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
             double hh = hours * 60;
 
-            if (totMinutes <= hh && _weekDaySpan.Symmetrical )
+            if (totMinutes <= hh && _workWeekConfiguration.Symmetrical )
             {
                 #region Just for "Symmetrical" week
 
@@ -145,14 +163,14 @@ namespace PH.WorkingDaysAndTimeUtility
 
         private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
         {
-            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
+            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
             return workDaySpan.TimeSpans
                 .OrderBy(x => x.Start).Select(x => x.Start).FirstOrDefault();
         }
 
         private bool CheckIfWorkTime(DateTime d, out WorkTimeSpan nextInterval)
         {
-            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
+            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
             bool r = false;
             nextInterval = null;
 
@@ -190,7 +208,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
         private void CheckWorkDayStart(DateTime start)
         {
-            if (!(_weekDaySpan.WorkDays.ContainsKey(start.DayOfWeek)))
+            if (!(_workWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))
             {
                 var err = "Invalid DateTime start given: give a workingday for start or check your configuration";
                 throw new ArgumentException(err, "start");
@@ -201,7 +219,7 @@ namespace PH.WorkingDaysAndTimeUtility
         private double GetTotalWorkingHoursForTheDay(DateTime d)
         {
             double r = (double) 0;
-            var workDaySpan = _weekDaySpan.WorkDays[d.DayOfWeek];
+            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
             workDaySpan.TimeSpans.OrderBy(x => x.Start).ToList()
                 .ForEach(ts =>
                 {
@@ -263,9 +281,9 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             bool addAnother = false;
             //check if current is a workingDay
-            if (_weekDaySpan.WorkDays.ContainsKey(r.DayOfWeek))
+            if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
             {
-                if (!(_weekDaySpan.WorkDays[r.DayOfWeek].IsWorkingDay))
+                if (!(_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
                 {
                     addAnother = true;
                 }
@@ -293,7 +311,7 @@ namespace PH.WorkingDaysAndTimeUtility
         private List<DateTime> CalculateDaysForExclusions(int year)
         {
             List<DateTime> r = new List<DateTime>();
-            _daysToExcludeList.ForEach(day =>
+            _holidays.ForEach(day =>
             {
                 r.Add(day.Calculate(year));
             });
