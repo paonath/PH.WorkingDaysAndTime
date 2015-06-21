@@ -52,8 +52,6 @@ namespace PH.WorkingDaysAndTimeUtility
             resultListOfHoliDays = toExclude;
             return end;
         }
-           
-
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
             CheckWorkDayStart(start);
@@ -85,6 +83,26 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             
             return r;
+        }
+
+        public List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
+        {
+            CheckWorkDayStart(start);
+            List<DateTime> result = new List<DateTime>() {};
+            if (includeStartAndEnd)
+            {
+                result.Add(start);
+                result.Add(end);
+            }
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+
+            while (start.Date < end.Date)
+            {
+                start = AddOneDay(start, ref toExclude);
+                if (start.Date < end.Date || includeStartAndEnd)
+                    result.Add(start);
+            }
+            return result.Distinct().OrderByDescending(x => x.Date).ToList();
         }
 
 
@@ -279,7 +297,7 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 r.Add(day.Calculate(year));
             });
-            return r;
+            return r.OrderByDescending(x => x.Date).ToList();
         }
 
 
