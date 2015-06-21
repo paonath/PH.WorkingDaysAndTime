@@ -284,6 +284,17 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
         }
 
+        [TestMethod]
+        public void Stress_Test_Adding_3000_WotkDays_To_31_Dec_2015()
+        {
+            var d = new DateTime(2015, 12, 31, 9, 0, 0);
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+            var r = utility.AddWorkingDays(d, 3000);
+            
+            Assert.IsNotNull(r);
+        }
+
         #region config ...
         private WeekDaySpan GetSimpleWeek()
         {
