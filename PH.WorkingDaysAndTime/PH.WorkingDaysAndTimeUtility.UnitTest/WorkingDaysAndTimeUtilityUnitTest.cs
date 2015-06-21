@@ -167,6 +167,18 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
         }
 
+        [TestMethod]
+        public void Adding_3_WotkDays_To_31_Dec_2015_Will_Return_7_Jan_2016()
+        {
+            var d = new DateTime(2015, 12, 31, 9, 0, 0);
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+            var r = utility.AddWorkingDays(d, 3);
+            var e = new DateTime(2016, 1, 7, 9, 0, 0);
+            Assert.AreEqual(e, r);
+
+        }
+
         #region config ...
         private WeekDaySpan GetSimpleWeek()
         {
@@ -190,6 +202,33 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             };
             return week;
         }
+
+        /// <summary>
+        /// In Italy we have this list of Holidays plus 1 day different on each province.
+        /// For mine is Dec. 8.
+        /// </summary>
+        /// <returns></returns>
+        private List<HoliDay> GetItalianHolidays()
+        {
+            var italians = new List<HoliDay>()
+            {
+                new EasterMonday(),
+                new HoliDay(1, 1),
+                new HoliDay(6, 1),
+                new HoliDay(25, 4),
+                new HoliDay(1, 5),
+                new HoliDay(2, 6),
+                new HoliDay(15, 8),
+                new HoliDay(1, 11),
+                new HoliDay(8, 12),
+                new HoliDay(25, 12),
+                new HoliDay(26, 12)
+            };
+
+            italians.Add(new HoliDay(8, 12));
+            return italians;
+        }
+
 
         private WeekDaySpan GetAWeek()
         {

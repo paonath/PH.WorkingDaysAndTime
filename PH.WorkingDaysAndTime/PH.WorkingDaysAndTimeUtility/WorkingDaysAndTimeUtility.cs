@@ -59,7 +59,7 @@ namespace PH.WorkingDaysAndTimeUtility
             CheckWorkDayStart(start);
             DateTime r = start;
             var totMinutes = CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(start);
-            List<DateTime> toExclude;
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
             double hh = hours * 60;
 
             if (totMinutes <= hh && _weekDaySpan.Symmetrical )
@@ -80,8 +80,6 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             else
             {
-                //calculate toExclude
-                toExclude = CalculateDaysForExclusions(start.Year);
                 r = AddWorkingMinutes(r, totMinutes, toExclude);
 
             }
@@ -239,7 +237,12 @@ namespace PH.WorkingDaysAndTimeUtility
 
         private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
         {
+            int y = d.Year;
             DateTime r = d.AddDays(1);
+            if (y < r.Year)
+            {
+                toExclude.AddRange(CalculateDaysForExclusions(r.Year));
+            }
             bool addAnother = false;
             //check if current is a workingDay
             if (_weekDaySpan.WorkDays.ContainsKey(r.DayOfWeek))
@@ -258,7 +261,8 @@ namespace PH.WorkingDaysAndTimeUtility
                 r = AddOneDay(r,ref toExclude);
             
 
-            if (null != toExclude && toExclude.Count > 0 &&  toExclude.Contains(r))
+            if (null != toExclude && toExclude.Count > 0 
+                && DateTime.MinValue != toExclude.FirstOrDefault(x => x.Date == r.Date))
             {
                 toExclude.Remove(r);
                 r = AddOneDay(r,ref toExclude);
