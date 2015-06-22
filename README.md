@@ -14,8 +14,10 @@ Warning: this software is currently preview (beta):
 
 ```
 //this is the configuration of a work-week: 8h/day from monday to friday
-var wts1 = new WorkTimeSpan() { Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
-var wts2 = new WorkTimeSpan() { Start = new TimeSpan(14, 0, 0), End = new TimeSpan(18, 0, 0) };
+var wts1 = new WorkTimeSpan() 
+	{ Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
+var wts2 = new WorkTimeSpan() 
+	{ Start = new TimeSpan(14, 0, 0), End = new TimeSpan(18, 0, 0) };
 var wts = new List<WorkTimeSpan>() { wts1, wts2 };
 
 var week = new WeekDaySpan()
@@ -35,14 +37,15 @@ var week = new WeekDaySpan()
 };
 
 //this is the configuration for holidays: 
-//in Italy we have this list of Holidays plus 1 day different on each province, for mine is 8 Dec.
+//in Italy we have this list of Holidays plus 1 day different on each province,
+//for mine is 1 Dec (see last element of the List<HoliDay>).
 var italiansHoliDays = new List<HoliDay>()
 {
 	new EasterMonday(),new HoliDay(1, 1),new HoliDay(6, 1),
 	new HoliDay(25, 4),new HoliDay(1, 5),new HoliDay(2, 6),
 	new HoliDay(15, 8),new HoliDay(1, 11),new HoliDay(8, 12),
 	new HoliDay(25, 12),new HoliDay(26, 12)
-	, new HoliDay(8, 12)
+	, new HoliDay(1, 12)
 };
 
 //instantiate with configuration
