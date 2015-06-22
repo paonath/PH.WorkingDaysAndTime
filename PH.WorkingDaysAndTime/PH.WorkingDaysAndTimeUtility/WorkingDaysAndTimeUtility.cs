@@ -11,8 +11,8 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
-        private WeekDaySpan _workWeekConfiguration;
-        private List<HoliDay> _holidays;
+        private readonly WeekDaySpan _workWeekConfiguration;
+        private readonly List<HoliDay> _holidays;
         
        
         /// <summary>
@@ -57,20 +57,8 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             return end;
         }
-        public DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
-        {
-            CheckWorkDayStart(start);
 
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-            DateTime end = start;
-            for (int i = 0; i < days; i++)
-            {
-                end = AddOneDay(end, ref toExclude);
-            }
-            resultListOfHoliDays = toExclude;
-            return end;
-        }
+        
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
             CheckWorkDayStart(start);
@@ -124,6 +112,23 @@ namespace PH.WorkingDaysAndTimeUtility
             return result.Distinct().OrderByDescending(x => x.Date).ToList();
         }
 
+
+        #region private methods
+
+        private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
+        {
+            CheckWorkDayStart(start);
+
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+
+            DateTime end = start;
+            for (int i = 0; i < days; i++)
+            {
+                end = AddOneDay(end, ref toExclude);
+            }
+            resultListOfHoliDays = toExclude;
+            return end;
+        }
 
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
@@ -274,37 +279,44 @@ namespace PH.WorkingDaysAndTimeUtility
 
         private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
         {
-            int y = d.Year;
-            DateTime r = d.AddDays(1);
-            if (y < r.Year)
+            bool moreAdd = true;
+            DateTime r = d;
+
+            while (moreAdd)
             {
-                toExclude.AddRange(CalculateDaysForExclusions(r.Year));
-            }
-            bool addAnother = false;
-            //check if current is a workingDay
-            if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
-            {
-                if (!(_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
+                int y = d.Year;
+                r = r.AddDays(1);
+                if (y < r.Year)
                 {
-                    addAnother = true;
+                    toExclude.AddRange(CalculateDaysForExclusions(r.Year));
+                }
+
+                //check if current is a workingDay
+                if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
+                {
+                    if ((_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
+                    {
+                        if (null != toExclude && toExclude.Count > 0)
+                        {
+                            var holiDayInList = toExclude.FirstOrDefault(x => x.Date == r.Date);
+                            if (holiDayInList > DateTime.MinValue)
+                            {
+                                toExclude.Remove(holiDayInList);
+                            }
+                            else
+                            {
+                                moreAdd = false;
+                            }
+                        }
+                        else
+                        {
+                            moreAdd = false;
+                        }
+                        
+                    }
                 }
             }
-            else
-            {
-                addAnother = true;
-            }
 
-            if(addAnother)
-                r = AddOneDay(r,ref toExclude);
-            
-
-            if (null != toExclude && toExclude.Count > 0 
-                && DateTime.MinValue != toExclude.FirstOrDefault(x => x.Date == r.Date))
-            {
-                toExclude.Remove(r);
-                r = AddOneDay(r,ref toExclude);
-            }
-            
             return r;
         }
 
@@ -320,7 +332,7 @@ namespace PH.WorkingDaysAndTimeUtility
         }
 
 
-
+        #endregion
 
     }
 }
