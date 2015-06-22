@@ -321,7 +321,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
         /// <summary>
         /// In Italy we have this list of Holidays plus 1 day different on each province.
-        /// For mine is Dec. 8.
+        /// For mine is Dec. 1.
         /// </summary>
         /// <returns></returns>
         private List<HoliDay> GetItalianHolidays()
@@ -341,7 +341,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 new HoliDay(26, 12)
             };
 
-            italians.Add(new HoliDay(8, 12));
+            italians.Add(new HoliDay(1, 12));
             return italians;
         }
 
