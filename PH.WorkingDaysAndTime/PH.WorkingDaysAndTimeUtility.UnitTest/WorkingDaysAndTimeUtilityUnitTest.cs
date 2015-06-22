@@ -316,6 +316,24 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.IsNotNull(r);
         }
 
+        /// <summary>
+        /// Warning: this is very-very-very slow test.
+        /// On my machine will work...just for fun....
+        /// </summary>
+        [TestMethod]
+        public void Stress_Test_Adding_50_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList()
+        {
+            var d = new DateTime(2012, 2, 29, 9, 0, 0);
+            var weekConf = GetSimpleWeek();
+            var crazyList = GetCrazyListForStressTest();
+
+            var utility = new WorkingDaysAndTimeUtility(weekConf, crazyList);
+            var r = utility.AddWorkingDays(d, 50);
+
+            Assert.IsNotNull(r);
+        }
+
+
         #region config ...
         private WeekDaySpan GetSimpleWeek()
         {
@@ -395,6 +413,19 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             };
             return week;
         }
+
+        private List<HoliDay> GetCrazyListForStressTest()
+        {
+            DateTime st = new DateTime(2015,1,1);
+            List<HoliDay> l = new List<HoliDay>();
+            for (int i = 0; i < 365; i++)
+            {
+                var d = st.AddDays(i);
+                l.Add(new HoliDay(d.Day,d.Month));
+            }
+            return l;
+        }
+
         #endregion
     }
 
