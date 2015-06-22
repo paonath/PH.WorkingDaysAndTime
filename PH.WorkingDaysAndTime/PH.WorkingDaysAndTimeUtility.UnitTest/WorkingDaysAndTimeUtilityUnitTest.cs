@@ -321,14 +321,14 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         /// On my machine will work...just for fun....
         /// </summary>
         [TestMethod]
-        public void Stress_Test_Adding_50_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList()
+        public void Stress_Test_Adding_5_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList()
         {
             var d = new DateTime(2012, 2, 29, 9, 0, 0);
             var weekConf = GetSimpleWeek();
             var crazyList = GetCrazyListForStressTest();
 
             var utility = new WorkingDaysAndTimeUtility(weekConf, crazyList);
-            var r = utility.AddWorkingDays(d, 50);
+            var r = utility.AddWorkingDays(d, 5);
 
             Assert.IsNotNull(r);
         }
