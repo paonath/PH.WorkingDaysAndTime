@@ -12,6 +12,7 @@ Warning: this software is currently preview (beta):
 
 ## Code Examples
 
+**AddWorkingDays(DateTime start, int days)**
 ```
 //this is the configuration of a work-week: 8h/day from monday to friday
 var wts1 = new WorkTimeSpan() 
@@ -56,4 +57,15 @@ var result = utility.AddWorkingDays(new DateTime(2015,6,1), 3);
 //result is Jun 5, 2015 (see holidays list) 
 ```
 
+**GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)**
+```
+var start = new DateTime(2015, 12, 31, 9, 0, 0);
+var end = new DateTime(2016, 1, 7, 9, 0, 0);
+
+//omitted configurations and holidays...
+var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+
+//r is a workdays List<DateTime> between Dec 31 and Jan 7.
+var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
+```
 
