@@ -239,7 +239,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
 
         [TestMethod]
-        public void Method_Used_In_Readme_Code_Example()
+        public void Method_Used_In_Readme_Code_Example_1()
         {
             //this is the configuration of a work-week: 8h/day from monday to friday
             var wts1 = new WorkTimeSpan() { Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
@@ -283,6 +283,27 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.IsNotNull(result);
 
         }
+
+        [TestMethod]
+        public void Method_Used_In_Readme_Code_Example_2()
+        {
+
+            var weekConf = GetSimpleWeek();
+
+
+            var start = new DateTime(2015, 12, 31, 9, 0, 0);
+            var end = new DateTime(2016, 1, 7, 9, 0, 0);
+            
+            //omitted configurations and holidays...
+            var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+
+            //r is a workdays List<DateTime> between Dec 31 and Jan 7.
+            var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
+
+            Assert.IsNotNull(r);
+        }
+
+
 
         [TestMethod]
         public void Stress_Test_Adding_3000_WotkDays_To_31_Dec_2015()
