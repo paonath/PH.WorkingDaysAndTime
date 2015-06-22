@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PH.WorkingDaysAndTimeUtility
+namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
     /// <summary>
     /// Representation of a Work Day.

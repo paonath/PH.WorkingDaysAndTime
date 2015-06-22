@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PH.WorkingDaysAndTimeUtility
+namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
     /// <summary>
     /// A Slice of work-time.
