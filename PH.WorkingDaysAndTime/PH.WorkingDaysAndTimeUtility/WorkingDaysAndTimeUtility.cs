@@ -49,11 +49,29 @@ namespace PH.WorkingDaysAndTimeUtility
             
         }
 
+        /// <summary>
+        /// The method add <param name="days">n days</param> to given <param name="start">start Date</param>.
+        /// 
+        /// <see cref="WorkingDateTimeExtension.AddWorkingDays"/>
+        /// </summary>
+        /// <param name="start">Starting Date</param>
+        /// <param name="days">Numer of days to add</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns>First working-day after n occurences from given date</returns>
         public DateTime AddWorkingDays(DateTime start, int days)
         {
-            CheckWorkDayStart(start);
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-            return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+            try
+            {
+                CheckWorkDayStart(start);
+                List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+                return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+            }
+            catch (ArgumentException checkException)
+            {
+                
+                throw new ArgumentException("Invalid DateTime", "start",checkException);
+            }
+            
         }
 
         
@@ -211,6 +229,11 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
+        /// <summary>
+        /// Check if given DateTime is valid WorkDay.
+        /// </summary>
+        /// <param name="start">DateTime to Check</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
         private void CheckWorkDayStart(DateTime start)
         {
             if (!(_workWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))

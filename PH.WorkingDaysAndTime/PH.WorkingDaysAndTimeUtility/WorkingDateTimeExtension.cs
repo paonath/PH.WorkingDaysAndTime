@@ -8,6 +8,14 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public static class WorkingDateTimeExtension
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <param name="days"></param>
+        /// <param name="datesToExclude"></param>
+        /// <param name="workDaysOfTheWeeks"></param>
+        /// <returns></returns>
         public static DateTime AddWorkingDays(this DateTime dateTime, int days
             , List<DateTime> datesToExclude , List<DayOfWeek> workDaysOfTheWeeks 
             )
@@ -77,5 +85,8 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             return end;
         }
+
+
+        
     }
 }
