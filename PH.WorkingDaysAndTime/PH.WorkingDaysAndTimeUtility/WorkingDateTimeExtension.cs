@@ -16,7 +16,7 @@ namespace PH.WorkingDaysAndTimeUtility
             for (int i = 0; i < days; i++)
             {
                 bool moreAdd = true;
-                
+                var datesToExcludeList = datesToExclude;
 
                 while (moreAdd)
                 {
@@ -24,33 +24,43 @@ namespace PH.WorkingDaysAndTimeUtility
                     end = end.AddDays(1);
                     if (y < end.Year)
                     {
+                        //regenerate list for new year
                         List<DateTime> newExclusions = new List<DateTime>();
                         datesToExclude.ForEach(d =>
                         {
-                            DateTime n;
-                            if (DateTime.TryParse(String.Format("{0}-{1}-{2}", end.Year, d.Month, d.Day), out n))
+                            try
                             {
-                                newExclusions.Add(n);
+                                newExclusions.Add(new DateTime(end.Year, d.Month, d.Day));
+
                             }
+                            catch
+                            {
+                            }
+                            
                         });
 
-                        datesToExclude.AddRange(newExclusions);
+                        datesToExcludeList.AddRange(newExclusions);
                     }
 
                     //check if current is a workingDay
                     if (workDaysOfTheWeeks.Contains(end.DayOfWeek))
                     {
-                        if (datesToExclude.Count == 0)
+                        if (datesToExcludeList.Count == 0)
                         {
                             moreAdd = false;
                         }
                         else
                         {
-                            var holiDayInList = datesToExclude.FirstOrDefault(x => x.Date == end.Date);
-                            moreAdd = !(holiDayInList > DateTime.MinValue);
-                            
+                            var holiDayInList = datesToExcludeList.FirstOrDefault(x => x.Date == end.Date);
+                            if (holiDayInList.Date > DateTime.MinValue.Date)
+                            {
+                                datesToExcludeList.Remove(holiDayInList);
+                            }
+                            else
+                            {
+                                moreAdd = false;
+                            }
                         }
-
                     }
                 }
             }

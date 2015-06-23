@@ -12,6 +12,7 @@ namespace PH.WorkingDaysAndTimeUtility
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
         private readonly WeekDaySpan _workWeekConfiguration;
+        private readonly List<DayOfWeek> _workingDaysInWeek;
         private readonly List<HoliDay> _holidays;
         
        
@@ -35,6 +36,10 @@ namespace PH.WorkingDaysAndTimeUtility
                 _workWeekConfiguration = workWeekConfiguration;
                 _holidays = holidays;
 
+                _workingDaysInWeek =_workWeekConfiguration.WorkDays
+                    .Where(x => x.Value.IsWorkingDay == true)
+                    .Select(x => x.Key).ToList();
+
             }
             catch (ArgumentException agEx)
             {
@@ -46,8 +51,9 @@ namespace PH.WorkingDaysAndTimeUtility
 
         public DateTime AddWorkingDays(DateTime start, int days)
         {
-            List<DateTime> toExclude;
-            return AddWorkingDays(start, days, out toExclude);
+            CheckWorkDayStart(start);
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+            return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
         }
 
         
@@ -66,7 +72,8 @@ namespace PH.WorkingDaysAndTimeUtility
                 
                 var days = (int) (hh/totMinutes);
                 var otherMinutes = hh % totMinutes;
-                r = AddWorkingDays(r, days, out toExclude);
+                r = r.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+                    
                 if (otherMinutes > (double) 0)
                 {
                     r = AddWorkingMinutes(r, otherMinutes, toExclude);
@@ -97,7 +104,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
             while (start.Date < end.Date)
             {
-                start = AddOneDay(start, ref toExclude);
+                start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);   //AddOneDay(start, ref toExclude);
                 if (start.Date < end.Date || includeStartAndEnd)
                     result.Add(start);
             }
@@ -107,20 +114,20 @@ namespace PH.WorkingDaysAndTimeUtility
 
         #region private methods
 
-        private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
-        {
-            CheckWorkDayStart(start);
+        //private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
+        //{
+        //    CheckWorkDayStart(start);
 
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+        //    List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
 
-            DateTime end = start;
-            for (int i = 0; i < days; i++)
-            {
-                end = AddOneDay(end, ref toExclude);
-            }
-            resultListOfHoliDays = toExclude;
-            return end;
-        }
+        //    DateTime end = start;
+        //    for (int i = 0; i < days; i++)
+        //    {
+        //        end = AddOneDay(end, ref toExclude);
+        //    }
+        //    resultListOfHoliDays = toExclude;
+        //    return end;
+        //}
 
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
@@ -150,7 +157,7 @@ namespace PH.WorkingDaysAndTimeUtility
                 }
                 else
                 {
-                    r = AddOneDay(r, ref toExclude);
+                    r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
                     var ts = GetFirstTimeSpanOfTheWorkingDay(r);
                     r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
                 }
@@ -269,48 +276,48 @@ namespace PH.WorkingDaysAndTimeUtility
             }
         }
 
-        private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
-        {
-            bool moreAdd = true;
-            DateTime r = d;
+        //private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
+        //{
+        //    bool moreAdd = true;
+        //    DateTime r = d;
 
-            while (moreAdd)
-            {
-                int y = d.Year;
-                r = r.AddDays(1);
-                if (y < r.Year)
-                {
-                    toExclude.AddRange(CalculateDaysForExclusions(r.Year));
-                }
+        //    while (moreAdd)
+        //    {
+        //        int y = d.Year;
+        //        r = r.AddDays(1);
+        //        if (y < r.Year)
+        //        {
+        //            toExclude.AddRange(CalculateDaysForExclusions(r.Year));
+        //        }
 
-                //check if current is a workingDay
-                if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
-                {
-                    if ((_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
-                    {
-                        if (null != toExclude && toExclude.Count > 0)
-                        {
-                            var holiDayInList = toExclude.FirstOrDefault(x => x.Date == r.Date);
-                            if (holiDayInList > DateTime.MinValue)
-                            {
-                                toExclude.Remove(holiDayInList);
-                            }
-                            else
-                            {
-                                moreAdd = false;
-                            }
-                        }
-                        else
-                        {
-                            moreAdd = false;
-                        }
+        //        //check if current is a workingDay
+        //        if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
+        //        {
+        //            if ((_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
+        //            {
+        //                if (null != toExclude && toExclude.Count > 0)
+        //                {
+        //                    var holiDayInList = toExclude.FirstOrDefault(x => x.Date == r.Date);
+        //                    if (holiDayInList > DateTime.MinValue)
+        //                    {
+        //                        toExclude.Remove(holiDayInList);
+        //                    }
+        //                    else
+        //                    {
+        //                        moreAdd = false;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    moreAdd = false;
+        //                }
                         
-                    }
-                }
-            }
+        //            }
+        //        }
+        //    }
 
-            return r;
-        }
+        //    return r;
+        //}
 
 
         private List<DateTime> CalculateDaysForExclusions(int year)
