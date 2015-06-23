@@ -3,10 +3,11 @@
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
 
-Warning: this software is currently preview (beta):
+Warning: this software is currently preview (beta): [v0.2](https://github.com/paonath/PH.WorkingDaysAndTime/releases/tag/v0.2)
 
 ## Features
 - can add *n* work-days to a DateTime;
+- can add *n* work-days to a DateTime using extension method;
 - can add *n* work-hours to a DateTime;
 - can get a List of work-DateTime between 2 dates;
 
@@ -67,5 +68,21 @@ var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
 
 //r is a workdays List<DateTime> between Dec 31 and Jan 7.
 var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
+```
+
+**AddWorkingDays - DateTime Extension Method**
+```
+DateTime d = new DateTime(2015, 6, 23);
+
+//omitted configurations and holidays...
+List<DayOfWeek> week = GetWorkWeek(); 
+List<DateTime> holidays = new List<DateTime>(); 
+
+GetItalianHolidays().ForEach(h =>
+{
+    holidays.Add(h.Calculate(2015));
+});
+
+DateTime result = d.AddWorkingDays(4, holidays, week);
 ```
 
