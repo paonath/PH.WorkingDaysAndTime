@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PH.WorkingDaysAndTimeUtility
+namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
     /// <summary>
     /// A Week.

@@ -40,15 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EasterMonday.cs" />
-    <Compile Include="EasterSunday.cs" />
-    <Compile Include="HoliDay.cs" />
+    <Compile Include="Configuration\EasterMonday.cs" />
+    <Compile Include="Configuration\EasterSunday.cs" />
+    <Compile Include="Configuration\HoliDay.cs" />
     <Compile Include="IWorkingDaysAndTimeUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WeekDaySpan.cs" />
-    <Compile Include="WorkDaySpan.cs" />
+    <Compile Include="Configuration\WeekDaySpan.cs" />
+    <Compile Include="Configuration\WorkDaySpan.cs" />
+    <Compile Include="WorkingDateTimeExtension.cs" />
     <Compile Include="WorkingDaysAndTimeUtility.cs" />
-    <Compile Include="WorkTimeSpan.cs" />
+    <Compile Include="Configuration\WorkTimeSpan.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="WorkDaySpanUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorkingDateTimeExtensionUnitTest.cs" />
     <Compile Include="WorkingDaysAndTimeUtilityUnitTest.cs" />
   </ItemGroup>
   <ItemGroup>

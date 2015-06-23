@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PH.WorkingDaysAndTimeUtility.Configuration;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
@@ -96,6 +97,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 19);
+
             Assert.AreEqual(expected, r);
 
         }
@@ -306,7 +308,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
         [TestMethod]
-        public void Stress_Test_Adding_3000_WotkDays_To_31_Dec_2015()
+        public void Stress_Test_Adding_3000_WorkDays_To_31_Dec_2015()
         {
             var d = new DateTime(2015, 12, 31, 9, 0, 0);
             var weekConf = GetSimpleWeek();
@@ -321,16 +323,19 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         /// On my machine will work...just for fun....
         /// </summary>
         [TestMethod]
-        public void Stress_Test_Adding_50_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList()
+        public void Stress_Test_Adding_5_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList_Will_Get_2032_Feb_29()
         {
             var d = new DateTime(2012, 2, 29, 9, 0, 0);
+            var e = new DateTime(2032,2,29);
+
             var weekConf = GetSimpleWeek();
             var crazyList = GetCrazyListForStressTest();
 
             var utility = new WorkingDaysAndTimeUtility(weekConf, crazyList);
-            var r = utility.AddWorkingDays(d, 50);
+            var r = utility.AddWorkingDays(d, 5);
 
             Assert.IsNotNull(r);
+            Assert.AreEqual(e, r);
         }
 
 
