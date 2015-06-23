@@ -323,9 +323,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         /// On my machine will work...just for fun....
         /// </summary>
         [TestMethod]
-        public void Stress_Test_Adding_5_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList()
+        public void Stress_Test_Adding_5_WorkDays_To_29_Feb_2012_With_CrazyHolyDaysList_Will_Get_2032_Feb_29()
         {
             var d = new DateTime(2012, 2, 29, 9, 0, 0);
+            var e = new DateTime(2032,2,29);
+
             var weekConf = GetSimpleWeek();
             var crazyList = GetCrazyListForStressTest();
 
@@ -333,6 +335,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var r = utility.AddWorkingDays(d, 5);
 
             Assert.IsNotNull(r);
+            Assert.AreEqual(e, r);
         }
 
 

@@ -13,24 +13,31 @@ namespace PH.WorkingDaysAndTimeUtility
             )
         {
             DateTime end = dateTime;
+            int y = end.Year;
+            var originalList = new List<DateTime>();
+            datesToExclude.ForEach(it =>
+            {
+                originalList.Add(it);
+            });
+            var datesToExcludeList = datesToExclude;
+
             for (int i = 0; i < days; i++)
             {
                 bool moreAdd = true;
-                var datesToExcludeList = datesToExclude;
 
                 while (moreAdd)
                 {
-                    int y = end.Year;
                     end = end.AddDays(1);
                     if (y < end.Year)
                     {
+                        y = end.Year;
                         //regenerate list for new year
                         List<DateTime> newExclusions = new List<DateTime>();
-                        datesToExclude.ForEach(d =>
+                        originalList.ForEach(d =>
                         {
                             try
                             {
-                                newExclusions.Add(new DateTime(end.Year, d.Month, d.Day));
+                                newExclusions.Add(new DateTime(y, d.Month, d.Day));
 
                             }
                             catch
@@ -51,14 +58,18 @@ namespace PH.WorkingDaysAndTimeUtility
                         }
                         else
                         {
-                            var holiDayInList = datesToExcludeList.FirstOrDefault(x => x.Date == end.Date);
-                            if (holiDayInList.Date > DateTime.MinValue.Date)
+                            var holiDayInList = datesToExcludeList
+                                .FirstOrDefault(x => x.Date == end.Date);
+
+                            if (holiDayInList.Date != DateTime.MinValue.Date)
                             {
                                 datesToExcludeList.Remove(holiDayInList);
                             }
                             else
                             {
-                                moreAdd = false;
+                                
+                                    moreAdd = false;
+                                
                             }
                         }
                     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PH.WorkingDaysAndTimeUtility.Configuration;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
@@ -32,6 +33,46 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.AreEqual(e, r);
         }
 
+        [TestMethod]
+        public void Add_4_Day_To_Jun_23_2015_With_Holidays_Will_Return_Jun_29()
+        {
+            DateTime d = new DateTime(2015, 6, 23);
+            DateTime e = new DateTime(2015, 6, 29);
+
+            List<DayOfWeek> week = GetWorkWeek();
+            List<DateTime> holidays = new List<DateTime>();
+            
+            GetItalianHolidays().ForEach(h =>
+            {
+                holidays.Add(h.Calculate(2015));
+            });
+
+            DateTime r = d.AddWorkingDays(4, holidays, week);
+
+            Assert.AreEqual(e, r);
+        }
+
+        [TestMethod]
+        public void Add_4_Day_To_Jun_1_2015_With_Holidays_Will_Return_Jun_8()
+        {
+            DateTime d = new DateTime(2015, 6, 1);
+            DateTime e = new DateTime(2015, 6, 8);
+
+            List<DayOfWeek> week = GetWorkWeek();
+            List<DateTime> holidays = new List<DateTime>();
+
+            GetItalianHolidays().ForEach(h =>
+            {
+                holidays.Add(h.Calculate(2015));
+            });
+
+            DateTime r = d.AddWorkingDays(4, holidays, week);
+
+            Assert.AreEqual(e, r);
+        }
+
+
+        #region prv...
 
         private List<DayOfWeek> GetWorkWeek()
         {
@@ -41,5 +82,28 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 , DayOfWeek.Thursday , DayOfWeek.Friday
             };
         }
+
+        private List<HoliDay> GetItalianHolidays()
+        {
+            var italians = new List<HoliDay>()
+            {
+                new EasterMonday(),
+                new HoliDay(1, 1),
+                new HoliDay(6, 1),
+                new HoliDay(25, 4),
+                new HoliDay(1, 5),
+                new HoliDay(2, 6),
+                new HoliDay(15, 8),
+                new HoliDay(1, 11),
+                new HoliDay(8, 12),
+                new HoliDay(25, 12),
+                new HoliDay(26, 12)
+            };
+
+            italians.Add(new HoliDay(1, 12));
+            return italians;
+        }
+        
+        #endregion
     }
 }
