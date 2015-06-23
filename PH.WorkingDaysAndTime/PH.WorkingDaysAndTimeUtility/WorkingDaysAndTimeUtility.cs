@@ -5,13 +5,15 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using PH.WorkingDaysAndTimeUtility.Configuration;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
-        private WeekDaySpan _workWeekConfiguration;
-        private List<HoliDay> _holidays;
+        private readonly WeekDaySpan _workWeekConfiguration;
+        private readonly List<DayOfWeek> _workingDaysInWeek;
+        private readonly List<HoliDay> _holidays;
         
        
         /// <summary>
@@ -34,6 +36,10 @@ namespace PH.WorkingDaysAndTimeUtility
                 _workWeekConfiguration = workWeekConfiguration;
                 _holidays = holidays;
 
+                _workingDaysInWeek =_workWeekConfiguration.WorkDays
+                    .Where(x => x.Value.IsWorkingDay == true)
+                    .Select(x => x.Key).ToList();
+
             }
             catch (ArgumentException agEx)
             {
@@ -43,33 +49,32 @@ namespace PH.WorkingDaysAndTimeUtility
             
         }
 
+        /// <summary>
+        /// The method add <param name="days">n days</param> to given <param name="start">start Date</param>.
+        /// 
+        /// <see cref="WorkingDateTimeExtension.AddWorkingDays"/>
+        /// </summary>
+        /// <param name="start">Starting Date</param>
+        /// <param name="days">Numer of days to add</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns>First working-day after n occurences from given date</returns>
         public DateTime AddWorkingDays(DateTime start, int days)
         {
-            CheckWorkDayStart(start);
-
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-            DateTime end = start;
-            for (int i = 0; i < days; i++)
+            try
             {
-                end = AddOneDay(end,ref toExclude);
+                CheckWorkDayStart(start);
+                List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+                return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
             }
-            return end;
-        }
-        public DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
-        {
-            CheckWorkDayStart(start);
-
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-            DateTime end = start;
-            for (int i = 0; i < days; i++)
+            catch (ArgumentException checkException)
             {
-                end = AddOneDay(end, ref toExclude);
+                
+                throw new ArgumentException("Invalid DateTime", "start",checkException);
             }
-            resultListOfHoliDays = toExclude;
-            return end;
+            
         }
+
+        
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
             CheckWorkDayStart(start);
@@ -85,7 +90,8 @@ namespace PH.WorkingDaysAndTimeUtility
                 
                 var days = (int) (hh/totMinutes);
                 var otherMinutes = hh % totMinutes;
-                r = AddWorkingDays(r, days, out toExclude);
+                r = r.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+                    
                 if (otherMinutes > (double) 0)
                 {
                     r = AddWorkingMinutes(r, otherMinutes, toExclude);
@@ -116,13 +122,30 @@ namespace PH.WorkingDaysAndTimeUtility
 
             while (start.Date < end.Date)
             {
-                start = AddOneDay(start, ref toExclude);
+                start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);   //AddOneDay(start, ref toExclude);
                 if (start.Date < end.Date || includeStartAndEnd)
                     result.Add(start);
             }
             return result.Distinct().OrderByDescending(x => x.Date).ToList();
         }
 
+
+        #region private methods
+
+        //private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
+        //{
+        //    CheckWorkDayStart(start);
+
+        //    List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+
+        //    DateTime end = start;
+        //    for (int i = 0; i < days; i++)
+        //    {
+        //        end = AddOneDay(end, ref toExclude);
+        //    }
+        //    resultListOfHoliDays = toExclude;
+        //    return end;
+        //}
 
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
@@ -152,7 +175,7 @@ namespace PH.WorkingDaysAndTimeUtility
                 }
                 else
                 {
-                    r = AddOneDay(r, ref toExclude);
+                    r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
                     var ts = GetFirstTimeSpanOfTheWorkingDay(r);
                     r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
                 }
@@ -206,6 +229,11 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
+        /// <summary>
+        /// Check if given DateTime is valid WorkDay.
+        /// </summary>
+        /// <param name="start">DateTime to Check</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
         private void CheckWorkDayStart(DateTime start)
         {
             if (!(_workWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))
@@ -271,41 +299,48 @@ namespace PH.WorkingDaysAndTimeUtility
             }
         }
 
-        private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
-        {
-            int y = d.Year;
-            DateTime r = d.AddDays(1);
-            if (y < r.Year)
-            {
-                toExclude.AddRange(CalculateDaysForExclusions(r.Year));
-            }
-            bool addAnother = false;
-            //check if current is a workingDay
-            if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
-            {
-                if (!(_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
-                {
-                    addAnother = true;
-                }
-            }
-            else
-            {
-                addAnother = true;
-            }
+        //private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
+        //{
+        //    bool moreAdd = true;
+        //    DateTime r = d;
 
-            if(addAnother)
-                r = AddOneDay(r,ref toExclude);
-            
+        //    while (moreAdd)
+        //    {
+        //        int y = d.Year;
+        //        r = r.AddDays(1);
+        //        if (y < r.Year)
+        //        {
+        //            toExclude.AddRange(CalculateDaysForExclusions(r.Year));
+        //        }
 
-            if (null != toExclude && toExclude.Count > 0 
-                && DateTime.MinValue != toExclude.FirstOrDefault(x => x.Date == r.Date))
-            {
-                toExclude.Remove(r);
-                r = AddOneDay(r,ref toExclude);
-            }
-            
-            return r;
-        }
+        //        //check if current is a workingDay
+        //        if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
+        //        {
+        //            if ((_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
+        //            {
+        //                if (null != toExclude && toExclude.Count > 0)
+        //                {
+        //                    var holiDayInList = toExclude.FirstOrDefault(x => x.Date == r.Date);
+        //                    if (holiDayInList > DateTime.MinValue)
+        //                    {
+        //                        toExclude.Remove(holiDayInList);
+        //                    }
+        //                    else
+        //                    {
+        //                        moreAdd = false;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    moreAdd = false;
+        //                }
+                        
+        //            }
+        //        }
+        //    }
+
+        //    return r;
+        //}
 
 
         private List<DateTime> CalculateDaysForExclusions(int year)
@@ -319,7 +354,7 @@ namespace PH.WorkingDaysAndTimeUtility
         }
 
 
-
+        #endregion
 
     }
 }

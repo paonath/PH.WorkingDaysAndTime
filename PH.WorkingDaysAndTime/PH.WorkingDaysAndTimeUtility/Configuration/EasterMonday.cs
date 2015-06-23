@@ -1,6 +1,6 @@
 using System;
 
-namespace PH.WorkingDaysAndTimeUtility
+namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
     /// <summary>
     /// Easter Monday, one day after EasterSunday.

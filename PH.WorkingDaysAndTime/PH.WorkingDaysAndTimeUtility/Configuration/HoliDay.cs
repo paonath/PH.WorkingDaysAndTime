@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PH.WorkingDaysAndTimeUtility
+namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
     /// <summary>
     /// Holiday: a non-working day.
