@@ -46,16 +46,8 @@ namespace PH.WorkingDaysAndTimeUtility
 
         public DateTime AddWorkingDays(DateTime start, int days)
         {
-            CheckWorkDayStart(start);
-
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-            DateTime end = start;
-            for (int i = 0; i < days; i++)
-            {
-                end = AddOneDay(end,ref toExclude);
-            }
-            return end;
+            List<DateTime> toExclude;
+            return AddWorkingDays(start, days, out toExclude);
         }
 
         
