@@ -163,21 +163,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
         #region private methods
 
-        //private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
-        //{
-        //    CheckWorkDayStart(start);
-
-        //    List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-        //    DateTime end = start;
-        //    for (int i = 0; i < days; i++)
-        //    {
-        //        end = AddOneDay(end, ref toExclude);
-        //    }
-        //    resultListOfHoliDays = toExclude;
-        //    return end;
-        //}
-
+        
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
             DateTime r = start;
