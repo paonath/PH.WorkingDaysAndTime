@@ -169,37 +169,67 @@ namespace PH.WorkingDaysAndTimeUtility
             DateTime r = start;
             while (otherMinutes > 0)
             {
-                r = AddOneMinute(r, ref toExclude);
+
+                r = r.AddMinutes(1);
+
+                //check if in work-interval
+                WorkTimeSpan nextInterval;
+                bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
+
+                if (!isInWorkInterval)
+                {
+                    if (null != nextInterval)
+                    {
+                        
+                        var ts = nextInterval.Start;
+                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                    }
+                    else
+                    {
+                        r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
+                        var ts = GetFirstTimeSpanOfTheWorkingDay(r);
+                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                    }
+                }
                 otherMinutes--;
             }
+
             return r;
         }
 
-        private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
-        {
-            DateTime r = start.AddMinutes(1);
+        //private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
+        //{
+        //    bool moreAdd = true;
+        //    DateTime r = start;
+
+        //    while (moreAdd)
+        //    {
+        //        r = start.AddMinutes(1);
+
+        //        //check if in work-interval
+        //        WorkTimeSpan nextInterval;
+        //        bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
+        //        if (!isInWorkInterval)
+        //        {
+
+        //            if (null != nextInterval)
+        //            {
+        //                var ts = nextInterval.Start;
+        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+        //            }
+        //            else
+        //            {
+        //                r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
+        //                var ts = GetFirstTimeSpanOfTheWorkingDay(r);
+        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+        //            }
+        //        }    
+        //    }
+
             
-            //check if in work-interval
-            WorkTimeSpan nextInterval;
-            bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
-            if (!isInWorkInterval)
-            {
-  
-                if (null != nextInterval)
-                {
-                    var ts = nextInterval.Start;
-                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours,ts.Minutes,ts.Seconds);
-                }
-                else
-                {
-                    r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
-                    var ts = GetFirstTimeSpanOfTheWorkingDay(r);
-                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
-                }
-            }
 
-            return r;
-        }
+        //    return r;
+        //}
 
         private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
         {
@@ -234,11 +264,18 @@ namespace PH.WorkingDaysAndTimeUtility
                         ts.Start.Seconds);
                     var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
                         ts.End.Seconds);
-                    if (s <= d && d <= e)
+                    nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
+                    if (d == e)
                     {
-                        r = true;
-                        nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
                         break;
+                    }
+                    else
+                    {
+                        if (s <= d && d < e)
+                        {
+                            r = true;
+                            break;
+                        }
                     }
                 }
             }
