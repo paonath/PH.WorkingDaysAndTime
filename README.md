@@ -3,7 +3,7 @@
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
 
-Warning: this software is currently preview (beta): [v0.2](https://github.com/paonath/PH.WorkingDaysAndTime/releases/tag/v0.2)
+Warning: this software is currently preview (beta): [v0.3](https://github.com/paonath/PH.WorkingDaysAndTime/releases/tag/v0.3)
 
 ## Features
 - can add *n* work-days to a DateTime;
