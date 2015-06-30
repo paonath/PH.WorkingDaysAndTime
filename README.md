@@ -1,6 +1,6 @@
 # PH.WorkingDaysAndTime
 
-A tiny c# utility for calculating work days and work time.
+A tiny c# utility for calculating workdays and worktime (Business Day Calculator).
 The code is written in .NET C#.
 
 Warning: this software is currently preview (beta): [v0.3](https://github.com/paonath/PH.WorkingDaysAndTime/releases/tag/v0.3)
@@ -9,7 +9,7 @@ Warning: this software is currently preview (beta): [v0.3](https://github.com/pa
 - can add *n* work-days to a DateTime;
 - can add *n* work-days to a DateTime using extension method;
 - can add *n* work-hours to a DateTime;
-- can get a List of work-DateTime between 2 dates;
+- can get a List of work-DateTime between 2 dates (useful for count workdays, plan time works);
 
 ## Code Examples
 
