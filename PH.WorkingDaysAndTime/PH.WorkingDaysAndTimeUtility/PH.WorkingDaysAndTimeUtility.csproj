@@ -51,6 +51,14 @@
     <Compile Include="WorkingDaysAndTimeUtility.cs" />
     <Compile Include="Configuration\WorkTimeSpan.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="bsd3.licenseheader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LICENSE.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
