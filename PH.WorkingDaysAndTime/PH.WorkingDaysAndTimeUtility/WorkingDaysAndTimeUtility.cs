@@ -104,7 +104,13 @@ namespace PH.WorkingDaysAndTimeUtility
             
         }
 
-        
+        /// <summary>
+        /// The method add <param name="hours">n hours</param> to given <param name="start">start DateTime</param>
+        /// </summary>
+        /// <param name="start">Starting DateTime</param>
+        /// <param name="hours">Number of hours to add</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns>Result DateTime</returns>
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
             CheckWorkDayStart(start);
@@ -139,6 +145,31 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
+        /// <summary>
+        /// The method add <param name="minutes">n minutes</param> to 
+        /// given <param name="start">start DateTime</param>
+        /// </summary>
+        /// <param name="start">Starting DateTime</param>
+        /// <param name="minutes">Number of hours to add</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns>Result DateTime</returns>
+        public DateTime AddWorkingMinutes(DateTime start, double minutes)
+        {
+            CheckWorkDayStart(start);
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+            var r = AddWorkingMinutes(start, minutes, toExclude);
+            return r;
+        }
+
+
+        /// <summary>
+        /// The method get list of working-days between <param name="start">start</param> and <param name="end">end</param>.
+        /// </summary>
+        /// <param name="start">Start working Date</param>
+        /// <param name="end">End working Date</param>
+        /// <param name="includeStartAndEnd">True if start and end are included in list (Default: True)</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns>List of Working DateTime</returns>
         public List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
         {
             CheckWorkDayStart(start);
@@ -162,57 +193,73 @@ namespace PH.WorkingDaysAndTimeUtility
 
         #region private methods
 
-        //private DateTime AddWorkingDays(DateTime start, int days, out List<DateTime> resultListOfHoliDays)
-        //{
-        //    CheckWorkDayStart(start);
-
-        //    List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-
-        //    DateTime end = start;
-        //    for (int i = 0; i < days; i++)
-        //    {
-        //        end = AddOneDay(end, ref toExclude);
-        //    }
-        //    resultListOfHoliDays = toExclude;
-        //    return end;
-        //}
-
+        
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
             DateTime r = start;
             while (otherMinutes > 0)
             {
-                r = AddOneMinute(r, ref toExclude);
+
+                r = r.AddMinutes(1);
+
+                //check if in work-interval
+                WorkTimeSpan nextInterval;
+                bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
+
+                if (!isInWorkInterval)
+                {
+                    if (null != nextInterval)
+                    {
+                        
+                        var ts = nextInterval.Start;
+                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                    }
+                    else
+                    {
+                        r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
+                        var ts = GetFirstTimeSpanOfTheWorkingDay(r);
+                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                    }
+                }
                 otherMinutes--;
             }
+
             return r;
         }
 
-        private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
-        {
-            DateTime r = start.AddMinutes(1);
+        //private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
+        //{
+        //    bool moreAdd = true;
+        //    DateTime r = start;
+
+        //    while (moreAdd)
+        //    {
+        //        r = start.AddMinutes(1);
+
+        //        //check if in work-interval
+        //        WorkTimeSpan nextInterval;
+        //        bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
+        //        if (!isInWorkInterval)
+        //        {
+
+        //            if (null != nextInterval)
+        //            {
+        //                var ts = nextInterval.Start;
+        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+        //            }
+        //            else
+        //            {
+        //                r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
+        //                var ts = GetFirstTimeSpanOfTheWorkingDay(r);
+        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+        //            }
+        //        }    
+        //    }
+
             
-            //check if in work-interval
-            WorkTimeSpan nextInterval;
-            bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
-            if (!isInWorkInterval)
-            {
-  
-                if (null != nextInterval)
-                {
-                    var ts = nextInterval.Start;
-                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours,ts.Minutes,ts.Seconds);
-                }
-                else
-                {
-                    r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
-                    var ts = GetFirstTimeSpanOfTheWorkingDay(r);
-                    r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
-                }
-            }
 
-            return r;
-        }
+        //    return r;
+        //}
 
         private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
         {
@@ -247,11 +294,18 @@ namespace PH.WorkingDaysAndTimeUtility
                         ts.Start.Seconds);
                     var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
                         ts.End.Seconds);
-                    if (s <= d && d <= e)
+                    nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
+                    if (d == e)
                     {
-                        r = true;
-                        nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
                         break;
+                    }
+                    else
+                    {
+                        if (s <= d && d < e)
+                        {
+                            r = true;
+                            break;
+                        }
                     }
                 }
             }
