@@ -36,11 +36,19 @@ using System.Threading.Tasks;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
+    /// <summary>
+    /// A tiny utility for calculating work days and work time.
+    /// 
+    /// Can add n work-days to a DateTime;
+    /// Can add n work-hours to a DateTime;
+    /// Can get a List of work-DateTime between 2 dates;
+    /// </summary>
     public interface IWorkingDaysAndTimeUtility
     {
         /// <summary>
         /// The method add <param name="days">n days</param> to given <param name="start">start Date</param>.
         /// 
+        /// Counting works only forward.
         /// </summary>
         /// <param name="start">Starting Date</param>
         /// <param name="days">Numer of days to add</param>
@@ -49,7 +57,9 @@ namespace PH.WorkingDaysAndTimeUtility
         DateTime AddWorkingDays(DateTime start, int days);
 
         /// <summary>
-        /// The method add <param name="hours">n hours</param> to given <param name="start">start DateTime</param>
+        /// The method add <param name="hours">n hours</param> to given <param name="start">start DateTime</param>.
+        /// 
+        /// Counting works only forward.
         /// </summary>
         /// <param name="start">Starting DateTime</param>
         /// <param name="hours">Number of hours to add</param>
@@ -59,7 +69,9 @@ namespace PH.WorkingDaysAndTimeUtility
 
         /// <summary>
         /// The method add <param name="minutes">n minutes</param> to 
-        /// given <param name="start">start DateTime</param>
+        /// given <param name="start">start DateTime</param>.
+        /// 
+        /// Counting works only forward.
         /// </summary>
         /// <param name="start">Starting DateTime</param>
         /// <param name="minutes">Number of hours to add</param>

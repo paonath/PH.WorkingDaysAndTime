@@ -50,14 +50,14 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         }
 
         /// <summary>
-        /// Get if working day.
+        /// True if working day.
         /// </summary>
         public bool IsWorkingDay {
             get { return WorkingMinutesPerDay > (double)0; }
         }
 
         /// <summary>
-        /// cycle working-time slices and get total minutes.
+        /// Cycle working-time slices and get total minutes.
         /// </summary>
         /// <returns></returns>
         private double GetWorkingMinutesPerDay()

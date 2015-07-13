@@ -40,7 +40,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
     public class WeekDaySpan
     {
         /// <summary>
-        /// Get if all days have the same amount of working hours.
+        /// True if all days have the same amount of working hours.
         /// </summary>
         public bool Symmetrical {
             get { return GetIfsymmetrical(); }
@@ -76,7 +76,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         }
 
         /// <summary>
-        /// Days representation of Work time
+        /// Dictionary match Working Days and theirs Working Hours.
         /// </summary>
         public Dictionary<DayOfWeek, WorkDaySpan> WorkDays { get; set; }
     }

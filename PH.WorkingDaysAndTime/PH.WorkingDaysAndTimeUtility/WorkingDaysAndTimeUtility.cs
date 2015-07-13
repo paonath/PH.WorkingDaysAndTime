@@ -39,6 +39,7 @@ using PH.WorkingDaysAndTimeUtility.Configuration;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
+
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
         private readonly WeekDaySpan _workWeekConfiguration;
@@ -105,7 +106,9 @@ namespace PH.WorkingDaysAndTimeUtility
         }
 
         /// <summary>
-        /// The method add <param name="hours">n hours</param> to given <param name="start">start DateTime</param>
+        /// The method add <param name="hours">n hours</param> to given <param name="start">start DateTime</param>.
+        /// 
+        /// Counting works only forward.
         /// </summary>
         /// <param name="start">Starting DateTime</param>
         /// <param name="hours">Number of hours to add</param>
@@ -147,7 +150,9 @@ namespace PH.WorkingDaysAndTimeUtility
 
         /// <summary>
         /// The method add <param name="minutes">n minutes</param> to 
-        /// given <param name="start">start DateTime</param>
+        /// given <param name="start">start DateTime</param>.
+        /// 
+        /// Counting works only forward.
         /// </summary>
         /// <param name="start">Starting DateTime</param>
         /// <param name="minutes">Number of hours to add</param>
@@ -172,6 +177,15 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <returns>List of Working DateTime</returns>
         public List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
         {
+            DateTime sStart = start;
+            DateTime sEnd = end;
+            if (start > end)
+            {
+                start = sEnd;
+                end = sStart;
+            }
+
+
             CheckWorkDayStart(start);
             List<DateTime> result = new List<DateTime>() {};
             if (includeStartAndEnd)
@@ -183,7 +197,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
             while (start.Date < end.Date)
             {
-                start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);   //AddOneDay(start, ref toExclude);
+                start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);
                 if (start.Date < end.Date || includeStartAndEnd)
                     result.Add(start);
             }
@@ -193,7 +207,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
         #region private methods
 
-        
+
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
             DateTime r = start;
@@ -227,40 +241,7 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
-        //private DateTime AddOneMinute(DateTime start, ref List<DateTime> toExclude)
-        //{
-        //    bool moreAdd = true;
-        //    DateTime r = start;
-
-        //    while (moreAdd)
-        //    {
-        //        r = start.AddMinutes(1);
-
-        //        //check if in work-interval
-        //        WorkTimeSpan nextInterval;
-        //        bool isInWorkInterval = CheckIfWorkTime(r, out nextInterval);
-        //        if (!isInWorkInterval)
-        //        {
-
-        //            if (null != nextInterval)
-        //            {
-        //                var ts = nextInterval.Start;
-        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
-        //            }
-        //            else
-        //            {
-        //                r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
-        //                var ts = GetFirstTimeSpanOfTheWorkingDay(r);
-        //                r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
-        //            }
-        //        }    
-        //    }
-
-            
-
-        //    return r;
-        //}
-
+        
         private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
         {
             var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
@@ -383,50 +364,7 @@ namespace PH.WorkingDaysAndTimeUtility
             }
         }
 
-        //private DateTime AddOneDay(DateTime d,ref List<DateTime> toExclude)
-        //{
-        //    bool moreAdd = true;
-        //    DateTime r = d;
-
-        //    while (moreAdd)
-        //    {
-        //        int y = d.Year;
-        //        r = r.AddDays(1);
-        //        if (y < r.Year)
-        //        {
-        //            toExclude.AddRange(CalculateDaysForExclusions(r.Year));
-        //        }
-
-        //        //check if current is a workingDay
-        //        if (_workWeekConfiguration.WorkDays.ContainsKey(r.DayOfWeek))
-        //        {
-        //            if ((_workWeekConfiguration.WorkDays[r.DayOfWeek].IsWorkingDay))
-        //            {
-        //                if (null != toExclude && toExclude.Count > 0)
-        //                {
-        //                    var holiDayInList = toExclude.FirstOrDefault(x => x.Date == r.Date);
-        //                    if (holiDayInList > DateTime.MinValue)
-        //                    {
-        //                        toExclude.Remove(holiDayInList);
-        //                    }
-        //                    else
-        //                    {
-        //                        moreAdd = false;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    moreAdd = false;
-        //                }
-                        
-        //            }
-        //        }
-        //    }
-
-        //    return r;
-        //}
-
-
+        
         private List<DateTime> CalculateDaysForExclusions(int year)
         {
             List<DateTime> r = new List<DateTime>();

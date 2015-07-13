@@ -70,7 +70,34 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
             Assert.AreEqual(2, result.Count);
         }
+        [TestMethod]
+        [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
+        public void Get_List_Of_WorkingDays_Between_7_Jan_2016_And_31_Dec_2015_Excluding_startAndEnd_Will_Get_A_List_Of_2()
+        {
+            var s = new DateTime(2016, 1, 7, 9, 0, 0);
+            var e = new DateTime(2015, 12, 31, 9, 0, 0);
+            var expected =
+                (new List<DateTime>() { new DateTime(2016, 1, 4), new DateTime(2016, 1, 5) })
+                    .Select(x => x.Date)
+                    .OrderByDescending(
+                        x => x).ToList();
 
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+            var r = utility.GetWorkingDaysBetweenTwoDateTimes(s, e, false);
+
+            var result = r.Select(x => x.Date).OrderByDescending(x => x).ToList();
+
+            var differences1 = result.Except(expected);
+            var differences2 = expected.Except(result);
+
+
+
+            Assert.AreEqual(0, differences1.Count());
+            Assert.AreEqual(0, differences2.Count());
+
+            Assert.AreEqual(2, result.Count);
+        }
         [TestMethod]
         [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
         public void Method_Used_In_Readme_Code_Example_2()

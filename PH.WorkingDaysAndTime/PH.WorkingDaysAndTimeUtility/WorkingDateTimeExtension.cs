@@ -39,19 +39,25 @@ namespace PH.WorkingDaysAndTimeUtility
     public static class WorkingDateTimeExtension
     {
         /// <summary>
-        /// 
+        /// Returns a new System.DateTime that adds the <param name="days">specified number of working days</param> 
+        /// to the value of this instance.
+        /// Counting works only forward.
         /// </summary>
-        /// <param name="dateTime"></param>
-        /// <param name="days"></param>
-        /// <param name="datesToExclude"></param>
-        /// <param name="workDaysOfTheWeeks"></param>
-        /// <returns></returns>
+        /// <param name="dateTime">this instance of DateTime</param>
+        /// <param name="days">number of working days to add</param>
+        /// <param name="datesToExclude">List of holidays to skip calculating result</param>
+        /// <param name="workDaysOfTheWeeks">List of weekdays that are actually working days</param>
+        /// <returns>
+        /// An object whose value is the sum of the date and time represented 
+        /// by this instance and the number of working days represented by value.
+        /// </returns>
         public static DateTime AddWorkingDays(this DateTime dateTime, int days
             , List<DateTime> datesToExclude , List<DayOfWeek> workDaysOfTheWeeks 
             )
         {
             DateTime end = dateTime;
             int y = end.Year;
+            days = Math.Abs(days);
             var originalList = new List<DateTime>();
             datesToExclude.ForEach(it =>
             {
