@@ -3,6 +3,12 @@
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
 
+The tool is useful for calculate difference between two dates of workdays,
+to plan projects excluding holidays and absences.
+Is also  a simple starting-point to addons to estimate the date of the end of a job.
+
+The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.
+
 ## Features
 - can add *n* work-days to a DateTime;
 - can add *n* work-hours to a DateTime;
@@ -11,7 +17,7 @@ The code is written in .NET C#.
 ## Code Examples
 
 **AddWorkingDays(DateTime start, int days)**
-```
+```c#
 //this is the configuration of a work-week: 8h/day from monday to friday
 var wts1 = new WorkTimeSpan() 
 	{ Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
@@ -56,7 +62,7 @@ var result = utility.AddWorkingDays(new DateTime(2015,6,1), 3);
 ```
 
 **GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)**
-```
+```c#
 var start = new DateTime(2015, 12, 31, 9, 0, 0);
 var end = new DateTime(2016, 1, 7, 9, 0, 0);
 
