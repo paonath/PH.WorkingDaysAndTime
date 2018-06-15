@@ -1,4 +1,4 @@
-# PH.WorkingDaysAndTime
+# PH.WorkingDaysAndTime - V.2.0.0
 
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
