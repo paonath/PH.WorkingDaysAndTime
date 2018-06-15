@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PH.WorkingDaysAndTimeUtility", "PH.WorkingDaysAndTimeUtility\PH.WorkingDaysAndTimeUtility.csproj", "{76D64144-2D04-431F-A558-DCD6A6F10AC6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testing", "testing", "{4EAA2A1C-8F16-47CE-89EB-671B41C5F7EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PH.WorkingDaysAndTimeUtility.UnitTest", "PH.WorkingDaysAndTimeUtility.UnitTest\PH.WorkingDaysAndTimeUtility.UnitTest.csproj", "{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76D64144-2D04-431F-A558-DCD6A6F10AC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76D64144-2D04-431F-A558-DCD6A6F10AC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76D64144-2D04-431F-A558-DCD6A6F10AC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76D64144-2D04-431F-A558-DCD6A6F10AC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA} = {4EAA2A1C-8F16-47CE-89EB-671B41C5F7EF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {09B38D1A-1276-428F-A944-3F4211C68566}
+	EndGlobalSection
+EndGlobal
