@@ -187,3 +187,7 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+PH.WorkingDaysAndTime/.vs/PH.WorkingDaysAndTimeUtility/v15/Server/sqlite3/storage.ide-wal
+PH.WorkingDaysAndTime/.vs/PH.WorkingDaysAndTimeUtility/v15/Server/sqlite3/storage.ide-shm
+PH.WorkingDaysAndTime/.vs/PH.WorkingDaysAndTimeUtility/v15/Server/sqlite3/storage.ide
+PH.WorkingDaysAndTime/.vs/PH.WorkingDaysAndTimeUtility/v15/Server/sqlite3/db.lock
