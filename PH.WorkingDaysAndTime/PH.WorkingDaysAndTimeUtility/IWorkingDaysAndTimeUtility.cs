@@ -49,6 +49,20 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <returns>Result DateTime</returns>
         DateTime AddWorkingMinutes(DateTime start, double minutes);
 
+
+
+        /// <summary>
+        /// The method add <param name="timeSpan">n minutes</param> to 
+        /// given <param name="start">start DateTime</param>.
+        /// 
+        /// Counting works only forward.
+        /// </summary>
+        /// <param name="start">Starting DateTime</param>
+        /// <param name="timeSpan">Time Span - use <see cref="TimeSpan.TotalMinutes"/></param>
+        // <returns>Result DateTime</returns>
+        DateTime AddWorkingTimeSpan(DateTime start, TimeSpan timeSpan);
+
+
         /// <summary>
         /// The method get list of working-days between <param name="start">start</param> and <param name="end">end</param>.
         /// </summary>

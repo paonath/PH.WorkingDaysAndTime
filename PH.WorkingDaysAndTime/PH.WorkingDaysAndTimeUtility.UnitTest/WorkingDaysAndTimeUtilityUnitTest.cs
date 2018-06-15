@@ -201,6 +201,42 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
 
         [Fact]
+        public void Add_15_Minutes_AsTimeSpan_To_24_Jun_12_55_Will_Get_14_10()
+        {
+            var d        = new DateTime(2015, 6, 24, 12, 55, 0);
+            var weekConf = GetSimpleWeek();
+            var utility  = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+            var r = utility.AddWorkingTimeSpan(d, new TimeSpan(0, 15, 0));
+            var e        = new DateTime(2015, 6, 24, 14, 10, 0);
+            Assert.Equal(e, r);
+
+        }
+
+        [Fact]
+        public void Add_Invalid_TimeSpan_Throw()
+        {
+            Exception my = null;
+            try
+            {
+                var d        = new DateTime(2015, 6, 24, 12, 55, 0);
+                var weekConf = GetSimpleWeek();
+                var utility  = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+                var r        = utility.AddWorkingTimeSpan(d, new TimeSpan(0, 0, 0));
+                var e        = new DateTime(2015, 6, 24, 14, 10, 0);
+            }
+            catch (Exception e)
+            {
+                my = e;
+            }
+
+            Assert.NotNull(my);
+            Assert.True(my is ArgumentException);
+        }
+
+
+
+
+        [Fact]
         public void Add_15_Minutes_To_24_Jun_17_55_Will_Get_25_Jun_9_10()
         {
             var d = new DateTime(2015, 6, 24, 17, 55, 0);
