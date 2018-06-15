@@ -9,6 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testing", "testing", "{4EAA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PH.WorkingDaysAndTimeUtility.UnitTest", "PH.WorkingDaysAndTimeUtility.UnitTest\PH.WorkingDaysAndTimeUtility.UnitTest.csproj", "{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3127B709-481B-4508-8BA8-5857D404F74F}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
