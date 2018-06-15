@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PH.WorkingDaysAndTimeUtility.Configuration;
+using Xunit;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
-    [TestClass]
+    
     public class BaseTest
     {
 
-        [TestMethod]
+        [Fact]
         public void EmptyWeek_Fail_On_Instantiate()
         {
             Exception f0 = null;
@@ -37,19 +34,19 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 f1 = ex;
             }
 
-            Assert.IsNotNull(f0);
-            Assert.IsNotNull(f1);
+            Assert.NotNull(f0);
+            Assert.NotNull(f1);
 
         }
 
-        [TestMethod]
+        [Fact]
         public void Check_Symmetrical_And_NotSummetrical_Week()
         {
             var symmetrical = GetSimpleWeek();
             var notSymm = GetAWeek();
 
-            Assert.IsTrue(symmetrical.Symmetrical);
-            Assert.IsFalse(notSymm.Symmetrical);
+            Assert.True(symmetrical.Symmetrical);
+            Assert.False(notSymm.Symmetrical);
         }
 
         protected WeekDaySpan GetSimpleWeek()

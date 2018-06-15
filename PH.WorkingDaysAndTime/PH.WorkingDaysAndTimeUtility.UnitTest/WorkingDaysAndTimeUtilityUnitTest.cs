@@ -1,51 +1,18 @@
-﻿/* 
- * Copyright (c) 2015, paonath
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. Neither the name of PH.WorkingDaysAndTime nor the names of its
- *    contributors may be used to endorse or promote products derived from
- *    this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using PH.WorkingDaysAndTimeUtility.Configuration;
+using Xunit;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
-    [TestClass]
+    
     public class WorkingDaysAndTimeUtilityUnitTest
         : BaseTest
     {
 
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Add_1_Day_From_NoWorkingDay_Fail_On_Calculate()
         {
             var sunday = new DateTime(2015, 6, 14);
@@ -61,11 +28,10 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 f0 = ex;
             }
 
-            Assert.IsNotNull(f0);
+            Assert.NotNull(f0);
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Add_1_Day_On_Simple_Week_From_2015_06_16_With_No_Holidays()
         {
             var d = new DateTime(2015, 6, 16);
@@ -74,12 +40,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 17);
-            Assert.AreEqual(expected, r);
+            Assert.Equal(expected, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Add_1_Day_On_Simple_Week_From_2015_06_19_With_No_Holidays()
         {
             var d = new DateTime(2015, 6, 19);
@@ -88,12 +53,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 22);
-            Assert.AreEqual(expected, r);
+            Assert.Equal(expected, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Add_1_Day_On_Simple_With_2_HoliDays()
         {
             var d = new DateTime(2015, 6, 16);
@@ -104,12 +68,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var r = utility.AddWorkingDays(d, 1);
             var expected = new DateTime(2015, 6, 19);
 
-            Assert.AreEqual(expected, r);
+            Assert.Equal(expected, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingHours")]
+        [Fact]
         public void Invalid_Start_Time_Fail_On_Calculate()
         {
             var d = new DateTime(2015, 6, 16, 2, 3, 4);
@@ -126,12 +89,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 f0 = exception;
             }
 
-            Assert.IsNotNull(f0);
+            Assert.NotNull(f0);
         }
 
         
-        [TestMethod]
-        [TestCategory("AddWorkingHours")]
+        [Fact]
         public void Add_16Hours_On_8workingHoursDay_Will_Add_2_Days()
         {
             var d = new DateTime(2015, 6, 16, 9, 0, 0);
@@ -139,13 +101,12 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             var r = utility.AddWorkingHours(d, 16);
             var e = new DateTime(2015, 6, 18, 9, 0, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingHours")]
+        [Fact]
         public void Add_17Hours_On_8workingHoursDay_Will_Add_2_Days_and_1h()
         {
             var d = new DateTime(2015, 6, 16, 9, 0, 0);
@@ -153,12 +114,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             var r = utility.AddWorkingHours(d, 17);
             var e = new DateTime(2015, 6, 18, 10, 0, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingHours")]
+        [Fact]
         public void Add_33Hours_On_8workingHoursDay_Will_Add_3_Days_and_1h()
         {
             var d = new DateTime(2015, 6, 16, 9, 45, 0);
@@ -166,12 +126,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
             var r = utility.AddWorkingHours(d, 33);
             var e = new DateTime(2015, 6, 22, 10, 45, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Adding_3_WorkDays_To_31_Dec_2015_Will_Return_7_Jan_2016()
         {
             var d = new DateTime(2015, 12, 31, 9, 0, 0);
@@ -179,12 +138,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
             var r = utility.AddWorkingDays(d, 3);
             var e = new DateTime(2016, 1, 7, 9, 0, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingDays")]
+        [Fact]
         public void Method_Used_In_Readme_Code_Example_1()
         {
             //this is the configuration of a work-week: 8h/day from monday to friday
@@ -226,12 +184,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var result = utility.AddWorkingDays(new DateTime(2015,6,1), 3);
             //result is Jun 5, 2015 (see holidays list) 
 
-            Assert.IsNotNull(result);
+            Assert.NotNull(result);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingMinutes")]
+        [Fact]
         public void Add_15_Minutes_To_24_Jun_12_55_Will_Get_14_10()
         {
             var d = new DateTime(2015, 6, 24, 12, 55, 0);
@@ -239,12 +196,47 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
             var r = utility.AddWorkingMinutes(d, 15);
             var e = new DateTime(2015, 6, 24, 14, 10, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
         }
 
-        [TestMethod]
-        [TestCategory("AddWorkingMinutes")]
+        [Fact]
+        public void Add_15_Minutes_AsTimeSpan_To_24_Jun_12_55_Will_Get_14_10()
+        {
+            var d        = new DateTime(2015, 6, 24, 12, 55, 0);
+            var weekConf = GetSimpleWeek();
+            var utility  = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+            var r = utility.AddWorkingTimeSpan(d, new TimeSpan(0, 15, 0));
+            var e        = new DateTime(2015, 6, 24, 14, 10, 0);
+            Assert.Equal(e, r);
+
+        }
+
+        [Fact]
+        public void Add_Invalid_TimeSpan_Throw()
+        {
+            Exception my = null;
+            try
+            {
+                var d        = new DateTime(2015, 6, 24, 12, 55, 0);
+                var weekConf = GetSimpleWeek();
+                var utility  = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
+                var r        = utility.AddWorkingTimeSpan(d, new TimeSpan(0, 0, 0));
+                var e        = new DateTime(2015, 6, 24, 14, 10, 0);
+            }
+            catch (Exception e)
+            {
+                my = e;
+            }
+
+            Assert.NotNull(my);
+            Assert.True(my is ArgumentException);
+        }
+
+
+
+
+        [Fact]
         public void Add_15_Minutes_To_24_Jun_17_55_Will_Get_25_Jun_9_10()
         {
             var d = new DateTime(2015, 6, 24, 17, 55, 0);
@@ -252,7 +244,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
             var r = utility.AddWorkingMinutes(d, 15);
             var e = new DateTime(2015, 6, 25, 9, 10, 0);
-            Assert.AreEqual(e, r);
+            Assert.Equal(e, r);
 
         }
 

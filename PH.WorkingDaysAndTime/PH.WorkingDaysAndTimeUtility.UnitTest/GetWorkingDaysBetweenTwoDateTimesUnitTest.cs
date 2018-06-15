@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
-    [TestClass]
+    
     public class GetWorkingDaysBetweenTwoDateTimesUnitTest 
         : BaseTest
     {
 
-        [TestMethod]
-        [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
+        [Fact]
         public void Get_List_Of_WorkingDays_Between_31_Dec_2015_And_7_Jan_2016_Will_Get_A_List_Of_4()
         {
             var s = new DateTime(2015, 12, 31, 9, 0, 0);
@@ -35,15 +33,14 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
 
-            Assert.AreEqual(0, differences1.Count());
-            Assert.AreEqual(0, differences2.Count());
+            Assert.Empty(differences1);
+            Assert.Empty(differences2);
 
 
-            Assert.AreEqual(4, result.Count);
+            Assert.Equal(4, result.Count);
         }
 
-        [TestMethod]
-        [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
+        [Fact]
         public void Get_List_Of_WorkingDays_Between_31_Dec_2015_And_7_Jan_2016_Excluding_startAndEnd_Will_Get_A_List_Of_2()
         {
             var s = new DateTime(2015, 12, 31, 9, 0, 0);
@@ -65,13 +62,13 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
 
-            Assert.AreEqual(0, differences1.Count());
-            Assert.AreEqual(0, differences2.Count());
+            Assert.Empty(differences1);
+            Assert.Empty(differences2);
 
-            Assert.AreEqual(2, result.Count);
+            Assert.Equal(2, result.Count);
         }
-        [TestMethod]
-        [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
+        
+        [Fact]
         public void Get_List_Of_WorkingDays_Between_7_Jan_2016_And_31_Dec_2015_Excluding_startAndEnd_Will_Get_A_List_Of_2()
         {
             var s = new DateTime(2016, 1, 7, 9, 0, 0);
@@ -93,13 +90,13 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
 
-            Assert.AreEqual(0, differences1.Count());
-            Assert.AreEqual(0, differences2.Count());
+            Assert.Empty(differences1);
+            Assert.Empty(differences2);
 
-            Assert.AreEqual(2, result.Count);
+            Assert.Equal(2, result.Count);
         }
-        [TestMethod]
-        [TestCategory("GetWorkingDaysBetweenTwoDateTimes")]
+        
+        [Fact]
         public void Method_Used_In_Readme_Code_Example_2()
         {
 
@@ -115,7 +112,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             //r is a workdays List<DateTime> between Dec 31 and Jan 7.
             var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
 
-            Assert.IsNotNull(r);
+            Assert.NotNull(r);
         }
 
 
