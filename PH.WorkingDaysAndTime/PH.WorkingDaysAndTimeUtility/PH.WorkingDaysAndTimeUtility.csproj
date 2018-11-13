@@ -1,14 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;netcoreapp2.1</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseUrl>https://github.com/paonath/PH.WorkingDaysAndTime/blob/master/LICENSE</PackageLicenseUrl>
+
+    <PackageId>PH.WorkingDaysAndTime</PackageId>
+
+    
+    <Description>A tiny c# utility for calculating work days and work time. The code is written in .NET C#.
+
+      The tool is useful for calculate difference between two dates of workdays, to plan projects excluding holidays and absences. Is also a simple starting-point to addons to estimate the date of the end of a job.
+
+      The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
+    <PackageReleaseNotes></PackageReleaseNotes>
+
+    
+    <PackageTags>add n work-days to a DateTime, add n work-hours to a DateTime, add n workminutes to a DateTime, get a List of work-DateTime between 2 dates</PackageTags>
+
+    <PackageVersion>2.0.0</PackageVersion>
+    <IconUrl>https://raw.githubusercontent.com/paonath/Icons/master/nuget_es_img.png</IconUrl>
+    <Authors>Paolo Innocenti</Authors>
+    <Copyright>Copyright PH 2018 (c) paonath@gmail.com. All rights reserved.</Copyright>
+    <RepositoryUrl>https://github.com/paonath/PH.WorkingDaysAndTime</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/paonath/PH.WorkingDaysAndTime</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/paonath/Icons/master/nuget_es_img.png</PackageIconUrl>
+
+    
+    
   </PropertyGroup>
 
   <ItemGroup>
     <Folder Include="Configuration\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="dotnet pack $(ProjectPath) --no-build --include-source --include-symbols --output $(SolutionDir)PHTempPackages\  " />
+    <Exec Command="nuget init $(SolutionDir)PHTempPackages\ $(SolutionDir)PHPackages\ " />
+  </Target>
 </Project>

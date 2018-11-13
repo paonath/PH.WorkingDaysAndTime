@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>PH.WorkingDaysAndTime</id>
+    <version>2.0.0</version>
+    <authors>Paolo Innocenti</authors>
+    <owners>Paolo Innocenti</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/paonath/PH.WorkingDaysAndTime/blob/master/LICENSE</licenseUrl>
+    <description>A tiny c# utility for calculating work days and work time. The code is written in .NET C#.
+
+      The tool is useful for calculate difference between two dates of workdays, to plan projects excluding holidays and absences. Is also a simple starting-point to addons to estimate the date of the end of a job.
+
+      The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</description>
+    <copyright>Copyright PH 2018 (c) paonath@gmail.com. All rights reserved.</copyright>
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>
