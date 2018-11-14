@@ -9,6 +9,8 @@ Is also  a simple starting-point to addons to estimate the date of the end of a 
 
 The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.
 
+The package is available on  [nuget](https://www.nuget.org/packages/PH.WorkingDaysAndTime) 
+
 ## Features
 - can add *n* work-days to a DateTime;
 - can add *n* work-hours to a DateTime;
@@ -95,3 +97,8 @@ public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
 
 }
 ```
+
+## License
+
+This software is licensed by [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause).
+Link to License: [license](PH.WorkingDaysAndTime/blob/master/mdLicense.md)
