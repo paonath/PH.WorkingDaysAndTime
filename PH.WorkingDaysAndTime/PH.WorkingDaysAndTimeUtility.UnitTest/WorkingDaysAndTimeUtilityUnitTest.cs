@@ -248,6 +248,61 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
         }
 
+        [Fact]
+        public void Get_IfWorkingDay_OnSunday_OnSimpleWeek_ReturnFalse()
+        {
+            var sunday  = new DateTime(2018, 11, 4, 11,22,33);
+            var weekConf = GetSimpleWeek();
+            var utility  = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
+
+            var r = utility.IfWorkingMoment(sunday, out DateTime next, out DateTime previous);
+
+            var r2 = utility.IfWorkingMomentGettingPrevious(sunday, out DateTime prev2);
+            var r3 = utility.IfWorkingMomentGettingNext(sunday, out DateTime next2);
+
+            Assert.False(r);
+
+            Assert.Equal(next, next2);
+            Assert.Equal(previous, prev2);
+
+
+
+        }
+        [Fact]
+        public void Get_IfWorkingDay_OnTuesday_OnHolyDay_OnSimpleWeek_ReturnFalse()
+        {
+            var tuesday = new DateTime(2018, 11, 6, 11,22,33);
+            var prev0 = new DateTime(2018, 11, 5, 18,0,0);
+            var next0 = new DateTime(2018, 11, 7, 9,0,0);
+           
+            var weekConf = GetSimpleWeek();
+            var utility  = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>(){new HoliDay(6,11)});
+
+            var r = utility.IfWorkingMoment(tuesday, out DateTime next, out DateTime previous);
+
+            Assert.False(r);
+           
+            Assert.Equal(prev0, previous);
+            Assert.Equal(next0, next);
+
+        }
+        [Fact]
+        public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
+        {
+            var tuesday = new DateTime(2018, 11, 6, 11,22,33);
+            var prev0 = tuesday.AddMinutes(-1);
+            var next0 = tuesday.AddMinutes(1);
+
+            var weekConf = GetSimpleWeek();
+            var utility  = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
+
+            var r = utility.IfWorkingMoment(tuesday, out DateTime next, out DateTime previous);
+
+            Assert.True(r);
+            Assert.Equal(prev0, previous);
+            Assert.Equal(next0, next);
+
+        }
     }
 
 }

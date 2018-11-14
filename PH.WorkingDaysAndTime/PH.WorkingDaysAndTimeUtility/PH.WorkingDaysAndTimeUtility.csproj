@@ -14,12 +14,14 @@
       The tool is useful for calculate difference between two dates of workdays, to plan projects excluding holidays and absences. Is also a simple starting-point to addons to estimate the date of the end of a job.
 
       The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
-    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageReleaseNotes>
+      Add check if given DateTime is Working-Time
+    </PackageReleaseNotes>
 
     
-    <PackageTags>add n work-days to a DateTime, add n work-hours to a DateTime, add n workminutes to a DateTime, get a List of work-DateTime between 2 dates</PackageTags>
+    <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan</PackageTags>
 
-    <PackageVersion>2.0.0</PackageVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <IconUrl>https://raw.githubusercontent.com/paonath/Icons/master/nuget_es_img.png</IconUrl>
     <Authors>Paolo Innocenti</Authors>
     <Copyright>Copyright PH 2018 (c) paonath@gmail.com. All rights reserved.</Copyright>

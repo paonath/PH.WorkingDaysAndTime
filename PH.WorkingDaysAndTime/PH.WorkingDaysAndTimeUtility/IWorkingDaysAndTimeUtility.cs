@@ -72,5 +72,37 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
         /// <returns>List of Working DateTime</returns>
         List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true);
+
+        /// <summary>
+        /// The method get True if given DateTime is a WorkingMoment and calculate previous Working-DateTime
+        /// by minutes interval
+        /// </summary>
+        /// <param name="date">Argument to check if WorkingMoment</param>
+        /// <param name="previousWorkingMoment">Previous Working-DateTime</param>
+        /// <param name="minutesInterval">minutes to add for next and previous working moment</param>
+        /// <returns>True if WorkingInstant</returns>
+        bool IfWorkingMomentGettingPrevious(DateTime date, out DateTime previousWorkingMoment, double minutesInterval = 1);
+
+        /// <summary>
+        /// The method get True if given DateTime is a WorkingMoment and calculate next Working-DateTime
+        /// by minutes interval
+        /// </summary>
+        /// <param name="date">Argument to check if WorkingMoment</param>
+        /// <param name="nextWorkingMoment">Next Working-DateTime</param>
+        /// <param name="minutesInterval">minutes to add for next and previous working moment</param>
+        /// <returns>True if WorkingInstant</returns>
+        bool IfWorkingMomentGettingNext(DateTime date, out DateTime nextWorkingMoment, double minutesInterval = 1);
+
+
+        /// <summary>
+        /// The method get True if given DateTime is a WorkingMoment and calculate next and previous Working-DateTime
+        /// by minutes interval
+        /// </summary>
+        /// <param name="date">Argument to check if WorkingMoment</param>
+        /// <param name="nextWorkingMoment">Next Working-DateTime</param>
+        /// <param name="previousWorkingMoment">Previous Working-DateTime</param>
+        /// <param name="minutesInterval">minutes to add for next and previous working moment</param>
+        /// <returns>True if WorkingInstant</returns>
+        bool IfWorkingMoment(DateTime date, out DateTime nextWorkingMoment, out DateTime previousWorkingMoment, double minutesInterval = 1);
     }
 }
