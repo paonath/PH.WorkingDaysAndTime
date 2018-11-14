@@ -101,4 +101,4 @@ public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
 ## License
 
 This software is licensed by [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause).
-Link to License: [license](PH.WorkingDaysAndTime/blob/master/mdLicense.md)
+Link to License: [license](/paonath/PH.WorkingDaysAndTime/blob/master/README.md)
