@@ -1,4 +1,4 @@
-# PH.WorkingDaysAndTime - V.2.0.0
+# PH.WorkingDaysAndTime - V.2.0.1
 
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
@@ -73,3 +73,25 @@ var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
 var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
 ```
 
+**Testing if given date is Working-Datetime**
+```c#
+[Fact]
+public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
+{
+
+    //omitted configurations and holidays...
+    var tuesday = new DateTime(2018, 11, 6, 11,22,33);
+    var prev0 = tuesday.AddMinutes(-1);
+    var next0 = tuesday.AddMinutes(1);
+
+    var weekConf = GetSimpleWeek();
+    var utility  = new WorkingDaysAndTimeUtility(weekConf, new List<HoliDay>());
+
+    var r = utility.IfWorkingMoment(tuesday, out DateTime next, out DateTime previous);
+
+    Assert.True(r);
+    Assert.Equal(prev0, previous);
+    Assert.Equal(next0, next);
+
+}
+```
