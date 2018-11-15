@@ -82,9 +82,9 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             };
         }
 
-        private List<HoliDay> GetItalianHolidays()
+        private List<AHolyDay> GetItalianHolidays()
         {
-            var italians = new List<HoliDay>()
+            var italians = new List<AHolyDay>()
             {
                 new EasterMonday(),
                 new HoliDay(1, 1),

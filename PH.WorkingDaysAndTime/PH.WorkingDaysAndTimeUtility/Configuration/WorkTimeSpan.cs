@@ -15,5 +15,18 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// End Time for Work
         /// </summary>
         public TimeSpan End { get; set; }
+
+        public WorkTimeSpan()
+        {
+            
+        }
+
+        public WorkTimeSpan(TimeSpan start, TimeSpan end)
+        {
+            Start = start;
+            End = end;
+        }
+
+        
     }
 }

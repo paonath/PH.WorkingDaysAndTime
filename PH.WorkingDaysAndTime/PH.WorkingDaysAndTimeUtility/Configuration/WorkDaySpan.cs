@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
@@ -11,6 +12,16 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// Work times slices.
         /// </summary>
         public List<WorkTimeSpan> TimeSpans { get; set; }
+
+        public WorkDaySpan()
+            :this(new List<WorkTimeSpan>())
+        {
+        }
+
+        public WorkDaySpan(List<WorkTimeSpan> spans)
+        {
+            TimeSpans = spans;
+        }
 
         /// <summary>
         /// Get Working Minutes Per Day
@@ -42,5 +53,18 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             }
             return totalMinutes;
         }
+
+        
+        public WorkDaySpan Time(IEnumerable<WorkTimeSpan> worktimes)
+        {
+            TimeSpans.AddRange(worktimes);
+            return this;
+        }
+
+
+        public WorkDaySpan Time(WorkTimeSpan w) => Time(new List<WorkTimeSpan>() {w});
+        
+
+        public WorkDaySpan Time(TimeSpan start, TimeSpan end) => Time(new WorkTimeSpan(start, end));
     }
 }

@@ -5,18 +5,29 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using PH.WorkingDaysAndTimeUtility.Configuration;
 using PH.WorkingDaysAndTimeUtility.Extensions;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
-
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
         private readonly WeekDaySpan _workWeekConfiguration;
         private readonly List<DayOfWeek> _workingDaysInWeek;
-        private readonly List<HoliDay> _holidays;
-        
+        private readonly List<AHolyDay> _holidays;
+
+
+        /// <summary>
+        /// Create a new instance of the utility with given configuration.
+        /// </summary>
+        /// <param name="cfg">configuration class</param>
+        public WorkingDaysAndTimeUtility(WorkingDaysConfig cfg)
+            :this(cfg.WorkWeekConfiguration, cfg.Holidays)
+        {
+            
+        }
+
        
         /// <summary>
         /// Create a new instance of the utility with given configuration.
@@ -26,7 +37,7 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <exception cref="ArgumentNullException">Trown if null workWeekConfiguration</exception>
         /// <exception cref="ArgumentException">Thrown if workWeekConfiguration without working days defined</exception>
         public WorkingDaysAndTimeUtility(WeekDaySpan workWeekConfiguration
-            , List<HoliDay> holidays
+            , List<AHolyDay> holidays
             )
         {
             if(null == workWeekConfiguration)
@@ -232,6 +243,46 @@ namespace PH.WorkingDaysAndTimeUtility
             return result;
 
            
+        }
+
+
+        public static bool TryGetFromConfig(WorkingDaysConfig cfg, out WorkingDaysAndTimeUtility u)
+        {
+            try
+            {
+                u = new WorkingDaysAndTimeUtility(cfg);
+                return true;
+            }
+            catch (Exception e)
+            {
+                u = null;
+                return false;
+            }
+        }
+
+        public static bool TryParseConfig(string config, out IWorkingDaysAndTimeUtility u)
+        {
+
+
+            try
+            {
+                var cfg = JsonConvert.DeserializeObject<WorkingDaysConfig>(config);
+                if (TryGetFromConfig(cfg, out WorkingDaysAndTimeUtility uu))
+                {
+                    u = uu;
+                    return true;
+                }
+                else
+                {
+                    u = null;
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                u = null;
+                return false;
+            }
         }
 
 

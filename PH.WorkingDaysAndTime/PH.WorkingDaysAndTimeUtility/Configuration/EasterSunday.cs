@@ -11,7 +11,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
     /// <see cref="http://www.codeproject.com/Articles/10860/Calculating-Christian-Holidays"/>
     /// <seealso cref="http://www.codeproject.com/Articles/11666/Dynamic-Holiday-Date-Calculator"/>
     /// </summary>
-    public class EasterSunday : HoliDay
+    public class EasterSunday : CalculatedHoliDay
     {
         public EasterSunday()
             : base(0, 0)
@@ -44,6 +44,11 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
                 day -= 31;
             }
             return new DateTime(year, month, day);
+        }
+
+        public override Type GetHolyDayType()
+        {
+            return typeof(EasterSunday);
         }
 
     }

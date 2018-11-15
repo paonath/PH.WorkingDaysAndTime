@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>PH.WorkingDaysAndTime</id>
+    <version>2.0.2</version>
+    <authors>Paolo Innocenti</authors>
+    <owners>Paolo Innocenti</owners>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/paonath/PH.WorkingDaysAndTime/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/paonath/PH.WorkingDaysAndTime</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/paonath/Icons/master/nuget_es_img.png</iconUrl>
+    <description>A tiny c# utility for calculating work days and work time. The code is written in .NET C#.
+
+      The tool is useful for calculate difference between two dates of workdays, to plan projects excluding holidays and absences. Is also a simple starting-point to addons to estimate the date of the end of a job.
+
+      The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</description>
+    <releaseNotes>Add new kind of configuration using WorkingDaysConfig</releaseNotes>
+    <copyright>Copyright PH 2018 (c) paonath@gmail.com. All rights reserved.</copyright>
+    <tags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan</tags>
+    <repository url="https://github.com/paonath/PH.WorkingDaysAndTime" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="Newtonsoft.Json" version="11.0.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

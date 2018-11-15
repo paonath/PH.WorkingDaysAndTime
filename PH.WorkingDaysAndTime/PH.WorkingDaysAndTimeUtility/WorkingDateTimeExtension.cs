@@ -8,6 +8,9 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public static class WorkingDateTimeExtension
     {
+        
+
+
         /// <summary>
         /// Returns a new System.DateTime that adds the <param name="days">specified number of working days</param> 
         /// to the value of this instance.

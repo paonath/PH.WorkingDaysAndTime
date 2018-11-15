@@ -45,8 +45,8 @@ var week = new WeekDaySpan()
 
 //this is the configuration for holidays: 
 //in Italy we have this list of Holidays plus 1 day different on each province,
-//for mine is 1 Dec (see last element of the List<HoliDay>).
-var italiansHoliDays = new List<HoliDay>()
+//for mine is 1 Dec (see last element of the List<AHolyDay>).
+var italiansHoliDays = new List<AHolyDay>()
 {
 	new EasterMonday(),new HoliDay(1, 1),new HoliDay(6, 1),
 	new HoliDay(25, 4),new HoliDay(1, 5),new HoliDay(2, 6),
@@ -97,6 +97,49 @@ public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
 
 }
 ```
+
+## Code Configuration Examples
+
+**Use of WorkingDaysConfig**
+```c#
+//note thats w is WeekDaySpan and l is List<AHolyDay>
+//cfg is Json serializable
+var cfg = new WorkingDaysConfig(w, l);
+
+```
+
+**Map-Config Style**
+```c#
+var cfg = new WorkingDaysConfig()
+                      .Week(new WeekDaySpan().Day(DayOfWeek.Monday,
+                                                  new WorkDaySpan()
+                                                      .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
+                                                      .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
+                                             .Day(DayOfWeek.Tuesday,
+                                                  new WorkDaySpan()
+                                                      .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
+                                                      .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
+                           )
+                      .Holiday(new AHolyDay(15, 8))
+                      .Holiday(2, 6)
+                      .Holiday(new EasterMonday());
+
+var cfg2 = new WorkingDaysConfig().Week(WeekDaySpan.CreateSymmetricalConfig(new WorkDaySpan()
+																			.Time(new TimeSpan(9, 0, 0),
+																					new TimeSpan(13, 0, 0))
+																			.Time(new TimeSpan(14, 0, 0),
+																					new TimeSpan(18, 0, 0)),
+																			new DayOfWeek[]
+																			{
+																				DayOfWeek.Monday,
+																				DayOfWeek.Tuesday,
+																				DayOfWeek.Wednesday,
+																				DayOfWeek.Thursday,
+																				DayOfWeek.Friday
+																			}));
+
+```
+
 
 ## License
 

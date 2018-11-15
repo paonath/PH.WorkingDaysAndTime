@@ -12,9 +12,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// <summary>
         /// True if all days have the same amount of working hours.
         /// </summary>
-        public bool Symmetrical {
-            get { return GetIfsymmetrical(); }
-        }
+        public bool Symmetrical => GetIfsymmetrical();
 
         /// <summary>
         /// Find differences between WorkingMinutesPerDay and return True if none.
@@ -49,5 +47,40 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// Dictionary match Working Days and theirs Working Hours.
         /// </summary>
         public Dictionary<DayOfWeek, WorkDaySpan> WorkDays { get; set; }
+
+        public WeekDaySpan():this(new Dictionary<DayOfWeek, WorkDaySpan>())
+        {
+            
+        }
+
+        public WeekDaySpan(Dictionary<DayOfWeek, WorkDaySpan> dictionary)
+        {
+            WorkDays = dictionary;
+        }
+
+        
+
+        public WeekDaySpan Day(IEnumerable<KeyValuePair<DayOfWeek,WorkDaySpan>> values)
+        {
+            foreach (var pair in values)
+            {
+                WorkDays.Add(pair.Key, pair.Value);
+            }
+
+            return this;
+        }
+
+        public WeekDaySpan Day(KeyValuePair<DayOfWeek, WorkDaySpan> value) => Day(new List<KeyValuePair<DayOfWeek, WorkDaySpan>>() {value});
+
+        public WeekDaySpan Day(DayOfWeek d, WorkDaySpan w) => Day(new KeyValuePair<DayOfWeek, WorkDaySpan>(d, w));
+
+
+        public static WeekDaySpan CreateSymmetricalConfig(WorkDaySpan span, DayOfWeek[] days)
+        {
+            var e = days.Select(x => new KeyValuePair<DayOfWeek, WorkDaySpan>(x, span)).ToList();
+            return new WeekDaySpan().Day(e);
+
+        }
+
     }
 }

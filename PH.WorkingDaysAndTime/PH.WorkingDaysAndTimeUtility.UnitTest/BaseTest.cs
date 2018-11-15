@@ -18,7 +18,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             try
             {
                 var fake = new WeekDaySpan();
-                var utility = new WorkingDaysAndTimeUtility(fake, new List<HoliDay>());
+                var utility = new WorkingDaysAndTimeUtility(fake, new List<AHolyDay>());
             }
             catch (ArgumentException ex)
             {
@@ -27,7 +27,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             try
             {
                 var fake = new WeekDaySpan() { WorkDays = new Dictionary<DayOfWeek, WorkDaySpan>() };
-                var utility = new WorkingDaysAndTimeUtility(fake, new List<HoliDay>());
+                var utility = new WorkingDaysAndTimeUtility(fake, new List<AHolyDay>());
             }
             catch (ArgumentException ex)
             {
@@ -77,11 +77,10 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         /// For mine is Dec. 1.
         /// </summary>
         /// <returns></returns>
-        protected List<HoliDay> GetItalianHolidays()
+        protected List<AHolyDay> GetItalianHolidaysWithNoEasterMonday()
         {
-            var italians = new List<HoliDay>()
+            var italians = new List<AHolyDay>()
             {
-                new EasterMonday(),
                 new HoliDay(1, 1),
                 new HoliDay(6, 1),
                 new HoliDay(25, 4),
@@ -97,6 +96,21 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             italians.Add(new HoliDay(1, 12));
             return italians;
         }
+
+        /// <summary>
+        /// In Italy we have this list of Holidays plus 1 day different on each province.
+        /// For mine is Dec. 1.
+        /// </summary>
+        /// <returns></returns>
+        protected List<AHolyDay> GetItalianHolidays()
+        {
+            var italians = GetItalianHolidaysWithNoEasterMonday();
+            italians.Add(new EasterMonday());
+            italians.Add(new HoliDay(1, 12));
+            return italians;
+        }
+
+
 
 
         protected WeekDaySpan GetAWeek()

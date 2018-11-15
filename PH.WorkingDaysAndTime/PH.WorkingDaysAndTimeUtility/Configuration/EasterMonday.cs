@@ -9,12 +9,23 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
     /// </summary>
     public class EasterMonday : EasterSunday
     {
+        public EasterMonday()
+            :base()
+        {
+            
+        }
 
         public override DateTime Calculate(int year)
         {
             
             return base.Calculate(year).AddDays(1);
 
+        }
+        
+
+        public override Type GetHolyDayType()
+        {
+            return typeof(EasterMonday);
         }
     }
 }
