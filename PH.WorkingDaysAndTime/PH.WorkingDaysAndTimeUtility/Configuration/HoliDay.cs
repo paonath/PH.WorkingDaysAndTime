@@ -90,7 +90,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         }
     }
 
-    //[JsonConverter(typeof(AHolyDayJsonConverter))]
+    [JsonConverter(typeof(AHolyDayJsonConverter))]
     public class AHolyDay : ADay
     {
         [JsonIgnore]
@@ -105,7 +105,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
     /// <summary>
     /// A Calculated-runtime Day, with no checks.
     /// </summary>
-    //[JsonConverter(typeof(CalculatedHoliDaysonConverter))]
+    [JsonConverter(typeof(CalculatedHoliDaysonConverter))]
     public abstract class CalculatedHoliDay : AHolyDay
     {
 
@@ -159,7 +159,12 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             PerformCheckOnStart();
         }
 
-       
+
+        public override string ToString()
+        {
+            return $"Day: {this.Day} Month: {this.Month}";
+        }
+
 
         public override Type GetHolyDayType()
         {

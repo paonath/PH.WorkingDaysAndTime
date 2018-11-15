@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using PH.WorkingDaysAndTimeUtility.Configuration;
 using Xunit;
@@ -25,6 +26,10 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
             var ww = JsonConvert.SerializeObject(l);
+
+
+            var deserializeddList = JsonConvert.DeserializeObject<List<AHolyDay>>(ww);
+
 
 
             var cfg = new WorkingDaysConfig(w, l);

@@ -73,7 +73,28 @@ namespace PH.WorkingDaysAndTimeUtility.Converter
         public override AHolyDay ReadJson(JsonReader reader, Type objectType, AHolyDay existingValue, bool hasExistingValue,
                                           JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            JObject jsonObject = JObject.Load(reader);
+            var     properties = jsonObject.Properties().ToList();
+
+            var assemblyQualifiedName = properties.FirstOrDefault(x => x.Name == "CalculatedHoliDay");
+            if (null != assemblyQualifiedName)
+            {
+                var a = (string) assemblyQualifiedName.Value;
+                var o = Activator.CreateInstance(Type.GetType(a));
+
+                var inst = o as CalculatedHoliDay;
+
+                return inst;
+            }
+            else
+            {
+                var day   = (string) properties.FirstOrDefault(x => x.Name == "Day")?.Value;
+                var month = (string) properties.FirstOrDefault(x => x.Name == "Month")?.Value;
+
+                HoliDay o = new HoliDay(int.Parse(day), int.Parse(month));
+                return o;
+            }
+
         }
     }
 
@@ -81,19 +102,61 @@ namespace PH.WorkingDaysAndTimeUtility.Converter
     {
         public override void WriteJson(JsonWriter writer, CalculatedHoliDay value, JsonSerializer serializer)
         {
-            writer.WriteStartObject();
-            writer.WritePropertyName("CalculatedHoliDay");
-            serializer.Serialize(writer, value.AHolyDayToString());
+            if (value is HoliDay)
+            {
+                writer.WriteStartObject();
+                writer.WritePropertyName("Day");
+                serializer.Serialize(writer, value.Day);
+                writer.WritePropertyName("Month");
+                serializer.Serialize(writer, value.Month);
+                writer.WriteEndObject();
+            }
+            else
+            {
+                if (value is CalculatedHoliDay)
+                {
+                    writer.WriteStartObject();
+                    writer.WritePropertyName("CalculatedHoliDay");
+                    serializer.Serialize(writer, value.GetHolyDayType().AssemblyQualifiedName);
            
-            writer.WriteEndObject();
+                    writer.WriteEndObject();
+                }
+            }
+
+            
+
+            
+
+            //base.WriteJson(writer, value, serializer);
         }
 
         public override CalculatedHoliDay ReadJson(JsonReader reader, Type objectType, CalculatedHoliDay existingValue, bool hasExistingValue,
                                                    JsonSerializer serializer)
         {
-            var o = Activator.CreateInstance(objectType);
-            return o as CalculatedHoliDay;
+            JObject jsonObject = JObject.Load(reader);
+            var     properties = jsonObject.Properties().ToList();
+
+            var assemblyQualifiedName = properties.FirstOrDefault(x => x.Name == "CalculatedHoliDay");
+            if (null != assemblyQualifiedName)
+            {
+                var a = (string) assemblyQualifiedName.Value;
+                var o = Activator.CreateInstance(Type.GetType(a));
+
+                var inst = o as CalculatedHoliDay;
+
+                return inst;
+            }
+            else
+            {
+                var day = (string) properties.FirstOrDefault(x => x.Name == "Day")?.Value;
+                var month = (string) properties.FirstOrDefault(x => x.Name == "Month")?.Value;
+
+                HoliDay o = new HoliDay(int.Parse(day), int.Parse(month));
+                return o;
+            }
+
             
+
         }
     }
 
