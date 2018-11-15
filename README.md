@@ -1,4 +1,5 @@
-# PH.WorkingDaysAndTime - V.2.0.2
+# PH.WorkingDaysAndTime - [![NuGet Badge](https://buildstats.info/nuget/PH.WorkingDaysAndTime)](https://www.nuget.org/packages/PH.WorkingDaysAndTime/)
+
 
 A tiny c# utility for calculating work days and work time.
 The code is written in .NET C#.
