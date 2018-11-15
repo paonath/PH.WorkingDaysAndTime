@@ -32,64 +32,34 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         [Fact]
         public void Add_1_Day_On_Simple_Week_From_2015_06_16_With_No_Holidays()
         {
-            var d = new DateTime(2015, 6, 16);
+            var d = new DateTime(2015, 6, 16,9,0,0);
             var weekConf = GetSimpleWeek();
             var utility = new WorkingDaysAndTimeUtility(weekConf, new List<AHolyDay>());
 
             var r = utility.AddWorkingDays(d, 1);
-            var expected = new DateTime(2015, 6, 17);
+            var expected = new DateTime(2015, 6, 17,9,0,0);
             Assert.Equal(expected, r);
 
         }
 
-        [Fact]
-        public void Add_1_Day_On_Simple_Week_From_2015_06_19_With_No_Holidays()
-        {
-            var d = new DateTime(2015, 6, 19);
-            var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<AHolyDay>());
-
-            var r = utility.AddWorkingDays(d, 1);
-            var expected = new DateTime(2015, 6, 22);
-            Assert.Equal(expected, r);
-
-        }
+        
 
         [Fact]
         public void Add_1_Day_On_Simple_With_2_HoliDays()
         {
-            var d = new DateTime(2015, 6, 16);
+            var d = new DateTime(2015, 6, 16,9,0,0);
             var holidays = new List<AHolyDay>() { new HoliDay(17, 6), new HoliDay(18, 6), new EasterMonday() };
             var weekConf = GetSimpleWeek();
             var utility = new WorkingDaysAndTimeUtility(weekConf, holidays);
 
             var r = utility.AddWorkingDays(d, 1);
-            var expected = new DateTime(2015, 6, 19);
+            var expected = new DateTime(2015, 6, 19,9,0,0);
 
             Assert.Equal(expected, r);
 
         }
 
-        [Fact]
-        public void Invalid_Start_Time_Fail_On_Calculate()
-        {
-            var d = new DateTime(2015, 6, 16, 2, 3, 4);
-            var weekConf = GetSimpleWeek();
-            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<AHolyDay>());
-            Exception f0 = null;
-            try
-            {
-                var fake = utility.AddWorkingHours(d, 1);
-            }
-            catch (Exception exception)
-            {
-
-                f0 = exception;
-            }
-
-            Assert.NotNull(f0);
-        }
-
+        
         
         [Fact]
         public void Add_16Hours_On_8workingHoursDay_Will_Add_2_Days()
