@@ -301,6 +301,43 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.Equal(next0, next);
 
         }
+
+        [Fact]
+        public void Test_LeapYear()
+        {
+            int leap_year = 2016;
+
+            var prevFriday = new DateTime(leap_year,2,26);
+            var expected = new DateTime(leap_year, 2, 29);
+            var expectedTuesday = expected.AddDays(1);
+
+
+            var weekConf = GetSimpleWeek();
+            var utility = new WorkingDaysAndTimeUtility(weekConf, new List<AHolyDay>());
+
+            var monday = utility.AddWorkingDays(prevFriday, 1);
+
+            //
+            var utility2 = new WorkingDaysAndTimeUtility(weekConf, new List<AHolyDay>(){ new HoliDay(29,2)});
+            var tuesday = utility2.AddWorkingDays(prevFriday, 1);
+
+            var untouchedDay = new DateTime(2014, 2, 28,15,12,34);
+
+
+            var tParam = utility2.IfWorkingMomentGettingNext(tuesday, out var nextWork);
+            var tTrue = utility2.IfWorkingMomentGettingNext(untouchedDay, out var nextWork2);
+
+            var finalTest = utility2.AddWorkingDays(untouchedDay, 1);
+
+
+            Assert.Equal($"{expected:yy-MM-dd}" , $"{monday:yy-MM-dd}" );
+            Assert.Equal($"{expectedTuesday:yy-MM-dd}" , $"{tuesday:yy-MM-dd}" );
+            Assert.True(tParam);
+            Assert.True(tTrue);
+
+
+
+        }
     }
 
 }

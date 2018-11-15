@@ -77,6 +77,11 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 CheckWorkDayStart(start);
                 List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+
+                if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+                    start = nextStart;
+
+
                 return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
             }
             catch (ArgumentException checkException)
@@ -99,6 +104,11 @@ namespace PH.WorkingDaysAndTimeUtility
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
             CheckWorkDayStart(start);
+
+            if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+                start = nextStart;
+
+
             DateTime r = start;
             var totMinutes = CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(start);
             List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
@@ -130,6 +140,14 @@ namespace PH.WorkingDaysAndTimeUtility
             return r;
         }
 
+        private DateTime AddWorkingMinutesNoCheck(DateTime start, double minutes)
+        {
+
+            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+            var            r         = AddWorkingMinutes(start, minutes, toExclude);
+            return r;
+        }
+
         /// <summary>
         /// The method add <param name="minutes">n minutes</param> to 
         /// given <param name="start">start DateTime</param>.
@@ -143,9 +161,11 @@ namespace PH.WorkingDaysAndTimeUtility
         public DateTime AddWorkingMinutes(DateTime start, double minutes)
         {
             CheckWorkDayStart(start);
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-            var r = AddWorkingMinutes(start, minutes, toExclude);
-            return r;
+
+            if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+                start = nextStart;
+
+            return AddWorkingMinutesNoCheck(start, minutes);
         }
 
 
@@ -162,6 +182,10 @@ namespace PH.WorkingDaysAndTimeUtility
         {
             if (timeSpan.TotalMinutes <= 0)
                 throw new ArgumentException("Invalid TimeSpan: need TotalMinutes > 0", paramName: nameof(timeSpan));
+
+            if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+                start = nextStart;
+
 
             var minutes = timeSpan.TotalMinutes;
             return AddWorkingMinutes(start, minutes);
@@ -208,14 +232,22 @@ namespace PH.WorkingDaysAndTimeUtility
         public bool IfWorkingMomentGettingPrevious(DateTime date, out DateTime previousWorkingMoment, double minutesInterval = 1)
         {
             //PrivateIfWorkingMomentGettingPrevious(date, out var b, out previousWorkingMoment, minutesInterval, false);
-            previousWorkingMoment = new DateTime(date.Ticks);
-            PrvIfWorkingMomentByRef(ref previousWorkingMoment, minutesInterval);
-            if (date == previousWorkingMoment)
+
+            var dt = new DateTime(date.Ticks);
+            //previousWorkingMoment = new DateTime(date.Ticks);
+            PrvIfWorkingMomentByRef(ref dt, minutesInterval);
+
+
+
+            previousWorkingMoment = dt;
+
+            if (date == dt)
                 return true;
             else
             {
                 double interval = Math.Abs(minutesInterval);
                 return date.AddMinutes(-interval) == previousWorkingMoment;
+                
             }
 
 
@@ -226,7 +258,7 @@ namespace PH.WorkingDaysAndTimeUtility
             double interval = Math.Abs(minutesInterval);
             var chk = IfWorkingMomentGettingPrevious(date, out var p, minutesInterval);
             
-            nextWorkingMoment = chk ? this.AddWorkingMinutes(date, interval) : this.AddWorkingMinutes(p, interval);
+            nextWorkingMoment = chk ? this.AddWorkingMinutesNoCheck(date, interval) : this.AddWorkingMinutesNoCheck(p, interval);
 
             return chk;
         }
@@ -236,7 +268,7 @@ namespace PH.WorkingDaysAndTimeUtility
         {
             var result = IfWorkingMomentGettingPrevious(date, out previousWorkingMoment, minutesInterval);
             
-            nextWorkingMoment = result ? this.AddWorkingMinutes(date, minutesInterval) : this.AddWorkingMinutes(previousWorkingMoment, minutesInterval);
+            nextWorkingMoment = result ? this.AddWorkingMinutesNoCheck(date, minutesInterval) : this.AddWorkingMinutesNoCheck(previousWorkingMoment, minutesInterval);
 
 
 
@@ -567,7 +599,15 @@ namespace PH.WorkingDaysAndTimeUtility
             List<DateTime> r = new List<DateTime>();
             _holidays.ForEach(day =>
             {
-                r.Add(day.Calculate(year));
+                try
+                {
+                    r.Add(day.Calculate(year));
+                }
+                catch 
+                {
+                    //
+                }
+                
             });
             return r.OrderByDescending(x => x.Date).ToList();
         }

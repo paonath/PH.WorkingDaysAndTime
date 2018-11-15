@@ -14,6 +14,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var w = GetSimpleWeek();
             var l = GetItalianHolidays();
 
+            var bisestile = new HoliDay(29,2);
+
+            l.Add(bisestile);
+
+
             var easterMonday = new EasterMonday();
             var ser = JsonConvert.SerializeObject(easterMonday);
 

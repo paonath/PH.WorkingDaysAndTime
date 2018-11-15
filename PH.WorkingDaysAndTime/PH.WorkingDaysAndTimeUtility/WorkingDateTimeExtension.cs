@@ -25,9 +25,10 @@ namespace PH.WorkingDaysAndTimeUtility
         /// by this instance and the number of working days represented by value.
         /// </returns>
         public static DateTime AddWorkingDays(this DateTime dateTime, int days
-            , List<DateTime> datesToExclude , List<DayOfWeek> workDaysOfTheWeeks 
-            )
+            , List<DateTime> datesToExclude , List<DayOfWeek> workDaysOfTheWeeks )
         {
+
+
             DateTime end = dateTime;
             int y = end.Year;
             days = Math.Abs(days);
