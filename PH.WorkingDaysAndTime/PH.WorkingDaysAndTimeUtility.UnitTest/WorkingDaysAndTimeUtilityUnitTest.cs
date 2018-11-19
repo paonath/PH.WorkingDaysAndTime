@@ -308,6 +308,16 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
 
         }
+
+        [Fact]
+        public void CalculateThanksGivingDay()
+        {
+            //var l = new List<AHolyDay>() {new ThanksgivingDay()};
+            var thanksgiving = new ThanksgivingDay();
+            var day = thanksgiving.Calculate(2018);
+
+            Assert.Equal(new DateTime(2018,11,22).ToString("d"), day.ToString("d"));
+        }
     }
 
 }
