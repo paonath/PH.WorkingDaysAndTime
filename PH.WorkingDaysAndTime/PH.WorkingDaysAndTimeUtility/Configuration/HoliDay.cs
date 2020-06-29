@@ -7,29 +7,35 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
     //[JsonConverter(typeof(BaseDayJsonConverter))]
     public abstract class BaseDay
     {
-        
+        private readonly int _day;
+
         /// <summary>
         /// Day
         /// </summary>
-        public int Day { get; private set; }
+        public int Day => _day;
+
+        private readonly int _month;
+
         /// <summary>
         /// Month
         /// </summary>
-        public int Month { get; private set; }
+        public int Month => _month;
 
         protected BaseDay(int day,int mont)
         {
-            Day = day;
-            Month = mont;
+            _day = day;
+            _month = mont;
 
         }
 
         /// <summary>
-        /// 
+        /// Perform check on valid Day and Month combination
+        ///
+        /// <exception cref="ArgumentOutOfRangeException">The date is not a valid Day and Month combination</exception>
         /// </summary>
         protected void PerformCheckOnStart()
         {
-           var d = new DateTime(2016, Month,Day);
+            var d = new DateTime(2016, Month,Day);
         }
 
         public abstract DateTime Calculate(int year);
@@ -37,6 +43,13 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         public override bool Equals(object obj)
         {
             return obj?.GetHashCode() == GetHashCode();
+        }
+
+        /// <summary>Serves as the default hash function.</summary>
+        /// <returns>A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return $"{_month}-{_day}".GetHashCode();
         }
     }
 
