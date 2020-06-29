@@ -15,13 +15,13 @@
 
       The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
     <PackageReleaseNotes>
-      Fix errors on leap year.
+      Remove warnings. 
     </PackageReleaseNotes>
 
     
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan</PackageTags>
 
-    <PackageVersion>2.0.5-staging</PackageVersion>
+    <PackageVersion>2.0.5</PackageVersion>
     <Authors>Paolo Innocenti</Authors>
     <Copyright>Copyright PH 2020 (c) paonath@gmail.com. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/paonath/PH.WorkingDaysAndTime</RepositoryUrl>
