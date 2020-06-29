@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PH.WorkingDaysAndTimeUtility.Configuration;
 using PH.WorkingDaysAndTimeUtility.Extensions;
@@ -41,7 +37,10 @@ namespace PH.WorkingDaysAndTimeUtility
             )
         {
             if(null == workWeekConfiguration)
-                throw new ArgumentNullException("workWeekConfiguration","Week configuration mandatory");
+            {
+                throw new ArgumentNullException(nameof(workWeekConfiguration),"Week configuration mandatory");
+            }
+
             try
             {
                 CheckWeek(workWeekConfiguration);
@@ -50,7 +49,7 @@ namespace PH.WorkingDaysAndTimeUtility
                 _holidays = holidays;
 
                 _workingDaysInWeek =_workWeekConfiguration.WorkDays
-                    .Where(x => x.Value.IsWorkingDay == true)
+                    .Where(x => x.Value.IsWorkingDay)
                     .Select(x => x.Key).ToList();
 
             }
@@ -79,7 +78,9 @@ namespace PH.WorkingDaysAndTimeUtility
                 List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
 
                 if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+                {
                     start = nextStart;
+                }
 
 
                 return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
@@ -87,7 +88,7 @@ namespace PH.WorkingDaysAndTimeUtility
             catch (ArgumentException checkException)
             {
                 
-                throw new ArgumentException("Invalid DateTime", "start",checkException);
+                throw new ArgumentException("Invalid DateTime", nameof(start),checkException);
             }
             
         }
@@ -106,7 +107,9 @@ namespace PH.WorkingDaysAndTimeUtility
             CheckWorkDayStart(start);
 
             if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+            {
                 start = nextStart;
+            }
 
 
             DateTime r = start;
@@ -163,7 +166,9 @@ namespace PH.WorkingDaysAndTimeUtility
             CheckWorkDayStart(start);
 
             if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+            {
                 start = nextStart;
+            }
 
             return AddWorkingMinutesNoCheck(start, minutes);
         }
@@ -181,10 +186,14 @@ namespace PH.WorkingDaysAndTimeUtility
         public DateTime AddWorkingTimeSpan(DateTime start, TimeSpan timeSpan)
         {
             if (timeSpan.TotalMinutes <= 0)
+            {
                 throw new ArgumentException("Invalid TimeSpan: need TotalMinutes > 0", paramName: nameof(timeSpan));
+            }
 
             if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+            {
                 start = nextStart;
+            }
 
 
             var minutes = timeSpan.TotalMinutes;
@@ -212,7 +221,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
 
             CheckWorkDayStart(start);
-            List<DateTime> result = new List<DateTime>() {};
+            List<DateTime> result = new List<DateTime>();
             if (includeStartAndEnd)
             {
                 result.Add(start);
@@ -224,17 +233,18 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);
                 if (start.Date < end.Date || includeStartAndEnd)
+                {
                     result.Add(start);
+                }
             }
             return result.Distinct().OrderByDescending(x => x.Date).ToList();
         }
 
         public bool IfWorkingMomentGettingPrevious(DateTime date, out DateTime previousWorkingMoment, double minutesInterval = 1)
         {
-            //PrivateIfWorkingMomentGettingPrevious(date, out var b, out previousWorkingMoment, minutesInterval, false);
-
+            
             var dt = new DateTime(date.Ticks);
-            //previousWorkingMoment = new DateTime(date.Ticks);
+            
             PrvIfWorkingMomentByRef(ref dt, minutesInterval);
 
 
@@ -242,13 +252,15 @@ namespace PH.WorkingDaysAndTimeUtility
             previousWorkingMoment = dt;
 
             if (date == dt)
-                return true;
-            else
             {
+                return true;
+            }
+            
+
                 double interval = Math.Abs(minutesInterval);
                 return date.AddMinutes(-interval) == previousWorkingMoment;
-                
-            }
+            
+
 
 
         }
@@ -285,7 +297,7 @@ namespace PH.WorkingDaysAndTimeUtility
                 u = new WorkingDaysAndTimeUtility(cfg);
                 return true;
             }
-            catch (Exception e)
+            catch 
             {
                 u = null;
                 return false;
@@ -310,7 +322,7 @@ namespace PH.WorkingDaysAndTimeUtility
                     return false;
                 }
             }
-            catch (Exception e)
+            catch 
             {
                 u = null;
                 return false;
@@ -332,7 +344,9 @@ namespace PH.WorkingDaysAndTimeUtility
                     if (_workWeekConfiguration.IsWorkDateTime(d))
                     {
                         if (!recurring)
+                        {
                             d = d.AddMinutes(-interval);
+                        }
 
                         r = true;
                     }
@@ -352,9 +366,11 @@ namespace PH.WorkingDaysAndTimeUtility
             do
             {
                 if(r)
+                {
                     break;
+                }
 
-                
+
                 d = d.AddMinutes(-interval);
                 r = PrvIfWorkingMomentByRef(ref d, minutesInterval, true);
 
@@ -363,79 +379,64 @@ namespace PH.WorkingDaysAndTimeUtility
             return true;
         }
 
-        private bool PrivateIfWorkingMomentGettingPrevious(DateTime date, out bool realResult, out DateTime previousWorkingMoment, double minutesInterval = 1, bool recurring = false)
-        {
-            realResult = false;
-            bool   r        = false;
-            double interval = Math.Abs(minutesInterval);
+        //private bool PrivateIfWorkingMomentGettingPrevious(DateTime date, out bool realResult, out DateTime previousWorkingMoment, double minutesInterval = 1, bool recurring = false)
+        //{
+        //    realResult = false;
+        //    bool   r        = false;
+        //    double interval = Math.Abs(minutesInterval);
 
-            if ((_workWeekConfiguration.WorkDays.ContainsKey(date.DayOfWeek)))
-            {
-                //is a work day
-                r = _workWeekConfiguration.IsWorkDateTime(date);
-                if (r)
-                {
-                    if (!recurring)
-                    {
-                        realResult = true;
-                        previousWorkingMoment = this.AddWorkingMinutes(date, -interval);
-                    }
-                    else
-                    {
-                        previousWorkingMoment = date;
-                    }
+        //    if ((_workWeekConfiguration.WorkDays.ContainsKey(date.DayOfWeek)))
+        //    {
+        //        //is a work day
+        //        r = _workWeekConfiguration.IsWorkDateTime(date);
+        //        if (r)
+        //        {
+        //            if (!recurring)
+        //            {
+        //                realResult = true;
+        //                previousWorkingMoment = this.AddWorkingMinutes(date, -interval);
+        //            }
+        //            else
+        //            {
+        //                previousWorkingMoment = date;
+        //            }
 
                     
-                    return true;
-                }
-                else
-                {
-                    var intermediateDate1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            var intermediateDate1 = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
 
-                    do
-                    {
-                        intermediateDate1 = intermediateDate1.AddMinutes(-interval);
-                        r                 = PrivateIfWorkingMomentGettingPrevious(intermediateDate1, out bool b, out DateTime d, minutesInterval, true);
+        //            do
+        //            {
+        //                intermediateDate1 = intermediateDate1.AddMinutes(-interval);
+        //                r                 = PrivateIfWorkingMomentGettingPrevious(intermediateDate1, out bool b, out DateTime d, minutesInterval, true);
 
-                    } while (!r);
-                    //previousWorkingMoment = intermediateDate1;
+        //            } while (!r);
+        //            //previousWorkingMoment = intermediateDate1;
                     
-                    previousWorkingMoment = date.AddMinutes(-interval);
-                    return true;
-                }
+        //            previousWorkingMoment = date.AddMinutes(-interval);
+        //            return true;
+        //        }
                 
-            }
+        //    }
 
-            var intermediateDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
+        //    var intermediateDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
 
-            do
-            {
-                intermediateDate = intermediateDate.AddMinutes(-interval);
-                r                = PrivateIfWorkingMomentGettingPrevious(intermediateDate,out bool b,  out DateTime d, minutesInterval,true);
+        //    do
+        //    {
+        //        intermediateDate = intermediateDate.AddMinutes(-interval);
+        //        r                = PrivateIfWorkingMomentGettingPrevious(intermediateDate,out bool b,  out DateTime d, minutesInterval,true);
 
-            } while (!r);
+        //    } while (!r);
 
-            previousWorkingMoment = date;
-            return true;
+        //    previousWorkingMoment = date;
+        //    return true;
 
-        }
+        //}
 
-        /*
-        private bool IsWorkingInstant(DateTime d)
-        {
-            if ((_workWeekConfiguration.WorkDays.ContainsKey(d.DayOfWeek)))
-            {
-                //is a work day
-                var day = _workWeekConfiguration.WorkDays[d.DayOfWeek];
-
-
-            }
-
-            return false;
-
-        }
-        */
-
+        
 
         private DateTime AddWorkingMinutes(DateTime start, double otherMinutes, List<DateTime> toExclude)
         {
@@ -533,7 +534,7 @@ namespace PH.WorkingDaysAndTimeUtility
             if (!(_workWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))
             {
                 var err = "Invalid DateTime start given: give a workingday for start or check your configuration";
-                throw new ArgumentException(err, "start");
+                throw new ArgumentException(err, nameof(start));
             }
         }
 
@@ -562,12 +563,12 @@ namespace PH.WorkingDaysAndTimeUtility
         private double CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(DateTime start)
         {
             double ret = GetTotalWorkingHoursForTheDay(start);
-            var inError = ret == (double)0;
+            var inError = ret.Equals((double)0);
             
             if (inError)
             {
                 var err = "Invalid DateTime start given: give a valid time for start or check your configuration";
-                throw new ArgumentException(err, "start");
+                throw new ArgumentException(err, nameof(start));
             }
             else
             {
@@ -583,13 +584,15 @@ namespace PH.WorkingDaysAndTimeUtility
                 foreach (DayOfWeek dow in Enum.GetValues(typeof (DayOfWeek)))
                 {
                     if (weekDaySpan.WorkDays.ContainsKey(dow))
+                    {
                         throwMy = false;
+                    }
                 }
             }
             if (throwMy)
             {
                 var err = "WeekDaySpan without working days defined, check your configuration";
-                throw new ArgumentException(err, "weekDaySpan");
+                throw new ArgumentException(err, nameof(weekDaySpan));
             }
         }
 
