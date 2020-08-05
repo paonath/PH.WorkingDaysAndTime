@@ -112,32 +112,36 @@ var cfg = new WorkingDaysConfig(w, l);
 **Map-Config Style**
 ```c#
 var cfg = new WorkingDaysConfig()
-                      .Week(new WeekDaySpan().Day(DayOfWeek.Monday,
-                                                  new WorkDaySpan()
-                                                      .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
-                                                      .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
-                                             .Day(DayOfWeek.Tuesday,
-                                                  new WorkDaySpan()
-                                                      .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
-                                                      .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
+                        .Week(new WeekDaySpan()
+                        .Day(
+                            DayOfWeek.Monday,
+                            new WorkDaySpan()
+                                .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
+                                .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
+                        .Day(
+                            DayOfWeek.Tuesday,
+                            new WorkDaySpan()
+                                .Time(new TimeSpan(9, 0, 0), new TimeSpan(13, 0, 0))
+                                .Time(new TimeSpan(14, 0, 0), new TimeSpan(18, 0, 0)))
                            )
                       .Holiday(new AHolyDay(15, 8))
                       .Holiday(2, 6)
                       .Holiday(new EasterMonday());
 
-var cfg2 = new WorkingDaysConfig().Week(WeekDaySpan.CreateSymmetricalConfig(new WorkDaySpan()
-																			.Time(new TimeSpan(9, 0, 0),
-																					new TimeSpan(13, 0, 0))
-																			.Time(new TimeSpan(14, 0, 0),
-																					new TimeSpan(18, 0, 0)),
-																			new DayOfWeek[]
-																			{
-																				DayOfWeek.Monday,
-																				DayOfWeek.Tuesday,
-																				DayOfWeek.Wednesday,
-																				DayOfWeek.Thursday,
-																				DayOfWeek.Friday
-																			}));
+var cfg2 = new WorkingDaysConfig()
+            .Week(WeekDaySpan.CreateSymmetricalConfig(new WorkDaySpan()
+                .Time(new TimeSpan(9, 0, 0),
+                        new TimeSpan(13, 0, 0))
+                .Time(new TimeSpan(14, 0, 0),
+                        new TimeSpan(18, 0, 0)),
+                new DayOfWeek[]
+                {
+                    DayOfWeek.Monday,
+                    DayOfWeek.Tuesday,
+                    DayOfWeek.Wednesday,
+                    DayOfWeek.Thursday,
+                    DayOfWeek.Friday
+                }));
 
 ```
 
