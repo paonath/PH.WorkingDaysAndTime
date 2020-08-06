@@ -1,3 +1,5 @@
+# WARNING : 3.0.0 ver - Complete refactoring
+
 # PH.WorkingDaysAndTime - [![NuGet Badge](https://buildstats.info/nuget/PH.WorkingDaysAndTime)](https://www.nuget.org/packages/PH.WorkingDaysAndTime/)
 
 
