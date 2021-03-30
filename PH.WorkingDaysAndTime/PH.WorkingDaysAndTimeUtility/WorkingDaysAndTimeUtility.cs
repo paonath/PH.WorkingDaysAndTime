@@ -9,9 +9,9 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
-        private readonly WeekDaySpan _workWeekConfiguration;
-        private readonly List<DayOfWeek> _workingDaysInWeek;
-        private readonly List<AHolyDay> _holidays;
+        public readonly WeekDaySpan WorkWeekConfiguration;
+        public readonly List<DayOfWeek> WorkingDaysInWeek;
+        public readonly List<AHolyDay> Holidays;
 
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 CheckWeek(workWeekConfiguration);
 
-                _workWeekConfiguration = workWeekConfiguration;
-                _holidays = holidays;
+                WorkWeekConfiguration = workWeekConfiguration;
+                Holidays = holidays;
 
-                _workingDaysInWeek =_workWeekConfiguration.WorkDays
+                WorkingDaysInWeek =WorkWeekConfiguration.WorkDays
                     .Where(x => x.Value.IsWorkingDay)
                     .Select(x => x.Key).ToList();
 
@@ -83,7 +83,7 @@ namespace PH.WorkingDaysAndTimeUtility
                 }
 
 
-                return start.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+                return start.AddWorkingDays(days, toExclude, WorkingDaysInWeek);
             }
             catch (ArgumentException checkException)
             {
@@ -117,14 +117,14 @@ namespace PH.WorkingDaysAndTimeUtility
             List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
             double hh = hours * 60;
 
-            if (totMinutes <= hh && _workWeekConfiguration.Symmetrical )
+            if (totMinutes <= hh && WorkWeekConfiguration.Symmetrical )
             {
                 #region Just for "Symmetrical" week
 
                 
                 var days = (int) (hh/totMinutes);
                 var otherMinutes = hh % totMinutes;
-                r = r.AddWorkingDays(days, toExclude, _workingDaysInWeek);
+                r = r.AddWorkingDays(days, toExclude, WorkingDaysInWeek);
                     
                 if (otherMinutes > (double) 0)
                 {
@@ -201,22 +201,48 @@ namespace PH.WorkingDaysAndTimeUtility
         }
 
 
-        /// <summary>
-        /// The method get list of working-days between <param name="start">start</param> and <param name="end">end</param>.
-        /// </summary>
-        /// <param name="start">Start working Date</param>
-        /// <param name="end">End working Date</param>
-        /// <param name="includeStartAndEnd">True if start and end are included in list (Default: True)</param>
-        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
-        /// <returns>List of Working DateTime</returns>
-        public List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
+        
+        public List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end)
         {
             DateTime sStart = start;
-            DateTime sEnd = end;
+            DateTime sEnd   = end;
             if (start > end)
             {
                 start = sEnd;
-                end = sStart;
+                end   = sStart;
+            }
+
+            DateTime realStart = start;
+            DateTime realEnd = end;
+            if (!IsAWorkDay(start))
+            {
+                this.IfWorkingMomentGettingNext(start, out DateTime realCalculated, 1);
+                realStart = new DateTime(realCalculated.Year, realCalculated.Month, realCalculated.Day);
+            }
+            if (!IsAWorkDay(end))
+            {
+                IfWorkingMomentGettingPrevious(end, out DateTime realCalculated2, 1);
+                realEnd = new DateTime(realCalculated2.Year, realCalculated2.Month, realCalculated2.Day);
+            }
+
+            return GetWorkingDaysBetweenTwoWorkingDateTimes(realStart, realEnd, true);
+
+        }
+
+        /// <summary>Gets the working days between two working date times.</summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="includeStartAndEnd">if set to <c>true</c> start and end are included in list (Default: <c>true</c>).</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns></returns>
+        public List<DateTime> GetWorkingDaysBetweenTwoWorkingDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
+        {
+            DateTime sStart = start;
+            DateTime sEnd   = end;
+            if (start > end)
+            {
+                start = sEnd;
+                end   = sStart;
             }
 
 
@@ -231,7 +257,7 @@ namespace PH.WorkingDaysAndTimeUtility
 
             while (start.Date < end.Date)
             {
-                start = start.AddWorkingDays(1, toExclude, _workingDaysInWeek);
+                start = start.AddWorkingDays(1, toExclude, WorkingDaysInWeek);
                 if (start.Date < end.Date || includeStartAndEnd)
                 {
                     result.Add(start);
@@ -289,6 +315,37 @@ namespace PH.WorkingDaysAndTimeUtility
            
         }
 
+        /// <summary>
+        /// Determines whether is a work day the specified day(do not check for Hours/Minutes, jut Day).
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns>
+        ///   <c>true</c> if is a work day the specified day; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsAWorkDay(DateTime day)
+        {
+
+            var check = WorkWeekConfiguration.WorkDays.ContainsKey(day.DayOfWeek);
+            if (!check)
+            {
+                return false;
+            }
+
+            var workTime = WorkWeekConfiguration.WorkDays[day.DayOfWeek];
+            if (!workTime.IsWorkingDay)
+            {
+                return false;
+            }
+
+            var holyDays = this.CalculateDaysForExclusions(day.Year);
+            if (holyDays.Any(x => x.Year == day.Year && x.Month == day.Month && x.Day == day.Day))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
 
         public static bool TryGetFromConfig(WorkingDaysConfig cfg, out WorkingDaysAndTimeUtility u)
         {
@@ -337,11 +394,11 @@ namespace PH.WorkingDaysAndTimeUtility
             double interval = Math.Abs(minutesInterval);
             bool r = false;
 
-            if (_workWeekConfiguration.WorkDays.ContainsKey(d.DayOfWeek))
+            if (WorkWeekConfiguration.WorkDays.ContainsKey(d.DayOfWeek))
             {
-                if (!_holidays.Contains(new HoliDay(d.Day, d.Month)))
+                if (!Holidays.Contains(new HoliDay(d.Day, d.Month)))
                 {
-                    if (_workWeekConfiguration.IsWorkDateTime(d))
+                    if (WorkWeekConfiguration.IsWorkDateTime(d))
                     {
                         if (!recurring)
                         {
@@ -460,7 +517,7 @@ namespace PH.WorkingDaysAndTimeUtility
                     }
                     else
                     {
-                        r = r.AddWorkingDays(1, toExclude, _workingDaysInWeek);  //AddOneDay(r, ref toExclude);
+                        r = r.AddWorkingDays(1, toExclude, WorkingDaysInWeek);  //AddOneDay(r, ref toExclude);
                         var ts = GetFirstTimeSpanOfTheWorkingDay(r);
                         r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
                     }
@@ -474,14 +531,14 @@ namespace PH.WorkingDaysAndTimeUtility
         
         private TimeSpan GetFirstTimeSpanOfTheWorkingDay(DateTime d)
         {
-            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
+            var workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
             return workDaySpan.TimeSpans
                 .OrderBy(x => x.Start).Select(x => x.Start).FirstOrDefault();
         }
 
         private bool CheckIfWorkTime(DateTime d, out WorkTimeSpan nextInterval)
         {
-            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
+            var workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
             bool r = false;
             nextInterval = null;
 
@@ -531,7 +588,7 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
         private void CheckWorkDayStart(DateTime start)
         {
-            if (!(_workWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))
+            if (!(WorkWeekConfiguration.WorkDays.ContainsKey(start.DayOfWeek)))
             {
                 var err = "Invalid DateTime start given: give a workingday for start or check your configuration";
                 throw new ArgumentException(err, nameof(start));
@@ -542,7 +599,7 @@ namespace PH.WorkingDaysAndTimeUtility
         private double GetTotalWorkingHoursForTheDay(DateTime d)
         {
             double r = (double) 0;
-            var workDaySpan = _workWeekConfiguration.WorkDays[d.DayOfWeek];
+            var workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
             workDaySpan.TimeSpans.OrderBy(x => x.Start).ToList()
                 .ForEach(ts =>
                 {
@@ -600,7 +657,7 @@ namespace PH.WorkingDaysAndTimeUtility
         private List<DateTime> CalculateDaysForExclusions(int year)
         {
             List<DateTime> r = new List<DateTime>();
-            _holidays.ForEach(day =>
+            Holidays.ForEach(day =>
             {
                 try
                 {
