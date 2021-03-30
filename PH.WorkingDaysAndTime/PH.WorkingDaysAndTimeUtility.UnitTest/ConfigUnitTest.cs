@@ -6,6 +6,42 @@ using Xunit;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
+    public class NewConfigUnitTest : BaseTest
+    {
+
+        [Fact]
+        public void T1()
+        {
+            var week = new WeekConfig(); 
+            week.DaysDictionary[DayOfWeek.Monday] = new List<TimeSlice>()
+            {
+                new TimeSlice(9, 0,13,0, true),
+                new TimeSlice(14,0,18,0, true)
+            };
+
+            var symmWeek = WeekConfigFactory.BuildSymmetrical(
+                                                              new[]
+                                                              {
+                                                                  DayOfWeek.Monday, DayOfWeek.Tuesday,
+                                                                  DayOfWeek.Wednesday, DayOfWeek.Thursday,
+                                                                  DayOfWeek.Friday
+                                                              }
+                                                              , new TimeSlice[]
+                                                              {
+                                                                  new WorkTimeSlice(9, 0, 13, 0)
+                                                                  , new WorkTimeSlice(14, 0, 18, 0)
+                                                                  , new OffWorkTimeSlice(18,1,20,0)
+                                                                  , new OffWorkTimeSlice(20,1,22,0, 2), 
+                                                              }
+                                                             );
+
+            var json = JsonConvert.SerializeObject(symmWeek);
+            
+
+        }
+
+    }
+
     public class ConfigUnitTest : BaseTest
     {
         [Fact]

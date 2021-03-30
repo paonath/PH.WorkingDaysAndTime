@@ -1,41 +1,75 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace PH.WorkingDaysAndTimeUtility.Configuration
 {
-    /// <summary>
-    /// Simple Time representation
-    /// </summary>
-    public interface ITime
+    public class WeekConfigFactory
     {
-        int Hours { get; set; }
-        int Minutes { get; set; }
-        int Seconds { get; set; }
-        bool IsWorkingTime { get; }
-        
+        public static WeekConfig BuildSymmetrical(IEnumerable<DayOfWeek> daysOfTheWeek, IEnumerable<TimeSlice> timeSlices)
+        {
+            var dd = daysOfTheWeek.OrderBy(x => x).ToArray();
+            var tt = timeSlices.OrderBy(x => x.Begin).ThenBy(x => x.End).ToList();
+            var dict = new Dictionary<DayOfWeek, List<TimeSlice>>();
+            foreach (var ofWeek in dd)
+            {
+                dict.Add(ofWeek, tt);
+            }
+            return new WeekConfig(dict);
+        }
+    }
+    
+    public class WeekConfig
+    {
+        public Dictionary<DayOfWeek,List<TimeSlice>> DaysDictionary { get; set; }
+
+        public WeekConfig()
+        {
+            DaysDictionary = new Dictionary<DayOfWeek, List<TimeSlice>>
+            {
+                {DayOfWeek.Monday, new List<TimeSlice>()},
+                {DayOfWeek.Tuesday, new List<TimeSlice>()},
+                {DayOfWeek.Wednesday, new List<TimeSlice>()},
+                {DayOfWeek.Thursday, new List<TimeSlice>()},
+                {DayOfWeek.Friday, new List<TimeSlice>()},
+                {DayOfWeek.Saturday, new List<TimeSlice>()},
+                {DayOfWeek.Sunday, new List<TimeSlice>()}
+            };
+        }
+
+        public WeekConfig(Dictionary<DayOfWeek,List<TimeSlice>> configDaysDictionary)
+            :this()
+        {
+            
+            foreach (DayOfWeek value in Enum.GetValues(typeof(DayOfWeek)))
+            {
+                if (configDaysDictionary.ContainsKey(value))
+                {
+                    DaysDictionary[value] = configDaysDictionary[value] ;
+                }
+                
+
+            }
+        }
+
+       
     }
 
-    public struct WorkTime : ITime
+    public class HolydaysConfig
     {
-        public int Hours { get; set; }
-        public int Minutes { get; set; }
-        public int Seconds { get; set; }
-        public bool IsWorkingTime => true;
+        public List<AHolyDay> Holidays { get; set; }
+        public List<OffWorkTimeSlice> OffWorkTimeSlices { get; set; }
     }
-
-    public struct OffTime : ITime
-    {
-        public int Hours { get; set; }
-        public int Minutes { get; set; }
-        public int Seconds { get; set; }
-        public bool IsWorkingTime => false;
-    }
-
-
+    
+    
+   
 
     /// <summary>
     /// A Slice of work-time.
     /// </summary>
-    [Obsolete("",true)]
+    [Obsolete("",false)]
     public class WorkTimeSpan
     {
         /// <summary>
