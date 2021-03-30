@@ -165,8 +165,9 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var workDays = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
 
 
-            var dbg = workDays.FirstOrDefault();
+            var dbg = workDays.LastOrDefault();
             Assert.NotEqual(start, dbg);
+            Assert.Equal(new DateTime(2021,1,4).Date, dbg.Date);
 
         }
         [Fact]
