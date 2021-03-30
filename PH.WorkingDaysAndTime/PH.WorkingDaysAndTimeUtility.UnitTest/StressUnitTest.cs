@@ -16,7 +16,9 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
             var r = utility.AddWorkingDays(d, 3000);
 
-            Assert.NotNull(r);
+            Assert.NotEqual(DateTime.MinValue, r);
+            Assert.NotEqual(DateTime.MaxValue, r);
+            
         }
 
         

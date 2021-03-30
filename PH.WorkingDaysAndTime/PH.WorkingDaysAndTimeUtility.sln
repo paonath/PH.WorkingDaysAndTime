@@ -1,17 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2026
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PH.WorkingDaysAndTimeUtility", "PH.WorkingDaysAndTimeUtility\PH.WorkingDaysAndTimeUtility.csproj", "{76D64144-2D04-431F-A558-DCD6A6F10AC6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testing", "testing", "{4EAA2A1C-8F16-47CE-89EB-671B41C5F7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PH.WorkingDaysAndTimeUtility.UnitTest", "PH.WorkingDaysAndTimeUtility.UnitTest\PH.WorkingDaysAndTimeUtility.UnitTest.csproj", "{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PH.WorkingDaysAndTimeUtility.UnitTest", "PH.WorkingDaysAndTimeUtility.UnitTest\PH.WorkingDaysAndTimeUtility.UnitTest.csproj", "{B2FBA2E2-A886-4F5C-8D71-9808A878DBAA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3127B709-481B-4508-8BA8-5857D404F74F}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.props = Directory.Build.props
+		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
 Global

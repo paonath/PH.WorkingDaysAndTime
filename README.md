@@ -64,7 +64,7 @@ var result = utility.AddWorkingDays(new DateTime(2015,6,1), 3);
 //result is Jun 5, 2015 (see holidays list) 
 ```
 
-**GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)**
+**GetWorkingDaysBetweenTwoWorkingDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)**
 ```c#
 var start = new DateTime(2015, 12, 31, 9, 0, 0);
 var end = new DateTime(2016, 1, 7, 9, 0, 0);
@@ -73,7 +73,7 @@ var end = new DateTime(2016, 1, 7, 9, 0, 0);
 var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
 
 //r is a workdays List<DateTime> between Dec 31 and Jan 7.
-var r = utility.GetWorkingDaysBetweenTwoDateTimes(start, end);
+var r = utility.GetWorkingDaysBetweenTwoWorkingDateTimes(start, end);
 ```
 
 **Testing if given date is Working-Datetime**
@@ -95,6 +95,27 @@ public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
     Assert.True(r);
     Assert.Equal(prev0, previous);
     Assert.Equal(next0, next);
+
+}
+```
+
+**Testing if given date is Working-Date**
+```c#
+[Fact]
+public void TestIfAWorkDay()
+{
+
+    //omitted configurations and holidays(Italian Holidays)...
+    var day   = new DateTime(2021, 1, 1);
+    var d2w   = new DateTime(2021, 3, 30);
+
+    var check0 = utility.IsAWorkDay(day);
+    var check1 = utility.IsAWorkDay(d2w);
+            
+
+    Assert.False(check0);
+    Assert.True(check1);
+        
 
 }
 ```

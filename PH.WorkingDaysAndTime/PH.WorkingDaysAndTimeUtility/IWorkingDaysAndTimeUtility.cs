@@ -68,10 +68,17 @@ namespace PH.WorkingDaysAndTimeUtility
         /// </summary>
         /// <param name="start">Start working Date</param>
         /// <param name="end">End working Date</param>
-        /// <param name="includeStartAndEnd">True if start and end are included in list (Default: True)</param>
-        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
         /// <returns>List of Working DateTime</returns>
-        List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true);
+        List<DateTime> GetWorkingDaysBetweenTwoDateTimes(DateTime start, DateTime end);
+
+        /// <summary>Gets the working days between two working date times.</summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <param name="includeStartAndEnd">if set to <c>true</c> start and end are included in list (Default: <c>true</c>).</param>
+        /// <exception cref="ArgumentException">Thrown if given DateTime is not a WorkDay.</exception>
+        /// <returns></returns>
+        List<DateTime> GetWorkingDaysBetweenTwoWorkingDateTimes(DateTime start, DateTime end,
+                                                                bool includeStartAndEnd = true);
 
         /// <summary>
         /// The method get True if given DateTime is a WorkingMoment and calculate previous Working-DateTime
@@ -104,5 +111,15 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <param name="minutesInterval">minutes to add for next and previous working moment</param>
         /// <returns>True if WorkingInstant</returns>
         bool IfWorkingMoment(DateTime date, out DateTime nextWorkingMoment, out DateTime previousWorkingMoment, double minutesInterval = 1);
+
+        /// <summary>
+        /// Determines whether is a work day the specified day(do not check for Hours/Minutes, jut Day).
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns>
+        ///   <c>true</c> if is a work day the specified day; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsAWorkDay(DateTime day);
+
     }
 }

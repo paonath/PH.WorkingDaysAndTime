@@ -15,15 +15,16 @@
 
       The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
     <PackageReleaseNotes>
-      Remove warnings. 
+      Refactored method 'GetWorkingDaysBetweenTwoDateTimes'.
+      Added method 'GetWorkingDaysBetweenTwoWorkingDateTimes'.
     </PackageReleaseNotes>
 
     
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan</PackageTags>
 
-    <PackageVersion>2.0.6-staging</PackageVersion>
+    <PackageVersion>2.0.6</PackageVersion>
     <Authors>Paolo Innocenti</Authors>
-    <Copyright>Copyright PH 2020 (c) paonath@gmail.com. All rights reserved.</Copyright>
+    <Copyright>Copyright PH 2021 (c) paonath@gmail.com. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/paonath/PH.WorkingDaysAndTime</RepositoryUrl>
     <PackageProjectUrl>https://github.com/paonath/PH.WorkingDaysAndTime</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/paonath/Icons/master/nuget_es_img.png</PackageIconUrl>
