@@ -42,9 +42,52 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             HolyDaySlots    = new List<TimeSlot>();
         }
     }
-  
     /// <summary>
-    /// A Slice of time 
+    /// 
+    /// </summary>
+    /// <seealso cref="PH.WorkingDaysAndTimeUtility.Configuration.TimeSlot" />
+    internal class DateTimeSlot : TimeSlot
+    {
+        /// <summary>Gets or sets the date time start.</summary>
+        /// <value>The date time start.</value>
+        public DateTime DateTimeStart { get; set; }
+
+        /// <summary>Gets or sets the date time end.</summary>
+        /// <value>The date time end.</value>
+        public DateTime DateTimeEnd { get; set; }
+
+        /// <summary>Builds the specified slot.</summary>
+        /// <param name="slot">The slot.</param>
+        /// <param name="d">The datetime.</param>
+        /// <returns></returns>
+        public static DateTimeSlot Build(TimeSlot slot, DateTime d)
+        {
+            var s = new DateTime(d.Year, d.Month, d.Day, slot.Start.Hours, slot.Start.Minutes, slot.Start.Seconds);
+            var e = new DateTime(d.Year, d.Month, d.Day, slot.End.Hours, slot.End.Minutes, slot.End.Seconds);
+
+            return new DateTimeSlot()
+            {
+                DateTimeEnd   = e,
+                DateTimeStart = s,
+                Start         = slot.Start,
+                End           = slot.End,
+                Factor        = slot.Factor,
+                Key           = slot.Key,
+                HolyDayFactor = slot.HolyDayFactor
+            };
+        }
+        /// <summary>If Datetime in the slot.</summary>
+        /// <param name="d">The DateTime.</param>
+        /// <returns><c>true</c> if in slot</returns>
+        internal bool InSlot(DateTime d)
+        {
+            
+            return d <= DateTimeEnd && d >= DateTimeStart;
+        }
+    }
+
+    /// <summary>
+    /// A Slice of time: for calculate extra-work hours (in <see cref="TimeSpan"/>)
     /// </summary>
     public class TimeSlot
     {
@@ -71,11 +114,27 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         {
              
         }
-
-        public TimeSlot(double factor, double holyDayFactor, TimeSpan start, TimeSpan end):this(null,factor,holyDayFactor,start,end)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeSlot"/> class.
+        /// </summary>
+        /// <param name="factor">The factor.</param>
+        /// <param name="holyDayFactor">The holy day factor.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        public TimeSlot(double factor, double holyDayFactor, TimeSpan start, TimeSpan end)
+            :this(null,factor,holyDayFactor,start,end)
         {
            
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeSlot"/> class.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="factor">The factor.</param>
+        /// <param name="holyDayFactor">The holy day factor.</param>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         public TimeSlot(string key,double factor, double holyDayFactor, TimeSpan start, TimeSpan end)
         {
             Key           = key;
@@ -90,7 +149,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
         public override bool Equals(object obj)
         {
-            return GetHashCode() == obj.GetHashCode();
+            return GetHashCode() == obj?.GetHashCode();
         }
 
         /// <summary>Serves as the default hash function.</summary>
@@ -100,7 +159,9 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             return ($"TimeSlot  {Start:c} {End:c}").GetHashCode();
         }
 
-
+        /// <summary>If Datetime in the slot.</summary>
+        /// <param name="d">The DateTime.</param>
+        /// <returns><c>true</c> if in slot</returns>
         internal bool InSlot(DateTime d)
         {
             var s = new DateTime(d.Year, d.Month, d.Day, Start.Hours, Start.Minutes, Start.Seconds);

@@ -409,7 +409,16 @@ namespace PH.WorkingDaysAndTimeUtility
             public double SecondsAmount { get; set; }
             
         }
-      
+
+        private List<DateTimeSlot> BuildDateTimeSlot(List<TimeSlot> slots, DateTime start, DateTime end)
+        {
+            var list = slots.Select(x => DateTimeSlot.Build(x, start)).ToList();
+            var mid  = list.Where(x => x.DateTimeEnd >= start && x.DateTimeStart <= end).ToList();
+
+            return mid
+                       .OrderBy(x => x.DateTimeStart)
+                       .ThenBy(x => x.DateTimeEnd).ToList();
+        }
 
         public WorkedTimeSliceResult SplitWorkedTimeInFactors(DateTime start, DateTime end)
         {
@@ -434,6 +443,11 @@ namespace PH.WorkingDaysAndTimeUtility
                 throw new ArgumentNullException(nameof(WorkWeekConfiguration), "TimeSlotConfig Config mandatory");
             }
 
+            if (!TimeSlotConfig.TimesDictionary.ContainsKey(start.DayOfWeek))
+            {
+                throw new ArgumentNullException(nameof(WorkWeekConfiguration), $"TimeSlotConfig Config not found for '{start.DayOfWeek}'");
+            }
+
             TimeSpan totalDuration = end - start;
 
             WorkedTimeSliceResult result = new WorkedTimeSliceResult()
@@ -445,20 +459,16 @@ namespace PH.WorkingDaysAndTimeUtility
 
 
 
-            List<TimeSlot> slots      = TimeSlotConfig.TimesDictionary[start.DayOfWeek];
+            List<TimeSlot> slotsi     = TimeSlotConfig.TimesDictionary[start.DayOfWeek];
+            
             bool           isAWorkDay = this.IsAWorkDay(start);
 
-            if (!isAWorkDay)
+            if (!isAWorkDay && null == TimeSlotConfig.HolyDaySlots && TimeSlotConfig.HolyDaySlots.Count > 0)
             {
-                if (null == TimeSlotConfig.HolyDaySlots || TimeSlotConfig.HolyDaySlots.Count == 0)
-                {
-                    slots = TimeSlotConfig.TimesDictionary[DayOfWeek.Sunday];
-                }
-                else
-                {
-                    slots = TimeSlotConfig.HolyDaySlots;
-                }
+                slotsi = TimeSlotConfig.HolyDaySlots;
             }
+
+            var slots = BuildDateTimeSlot(slotsi, start, end);
 
             var s = start;
 

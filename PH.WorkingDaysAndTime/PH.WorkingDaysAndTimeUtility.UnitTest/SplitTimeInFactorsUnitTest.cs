@@ -99,15 +99,16 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var slotConfig = GetTimeSlotConfig();
             utility.SetTimeSlotConfig(slotConfig);
 
-            var n = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 59, 58);
-            var e = n.AddHours(10);
+            var n           = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 8, 59, 58);
+            double hoursAmount = 2;
+            var e           = n.AddHours(hoursAmount);
 
             var res = utility.SplitWorkedTimeInFactors(n, e);
 
 
-            var b = res.WorkSlices;
+            var hours = res.TotalDuration.TotalHours;
 
-
+            Assert.Equal(hoursAmount, hours);
 
 
 
