@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
 	<Authors>Paolo Innocenti</Authors>
-	<Copyright>Copyright 2020 (c) Paolo Innocenti - paonath@gmail.com </Copyright>    
-	<AssemblyVersion>2.0.6</AssemblyVersion>
-    <FileVersion>2.0.6</FileVersion>
-    <Version>2.0.6</Version>
+	<Copyright>Copyright 2021 (c) Paolo Innocenti - paonath@gmail.com </Copyright>    
+	<AssemblyVersion>2.0.7</AssemblyVersion>
+    <FileVersion>2.0.7</FileVersion>
+    <Version>2.0.7</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
