@@ -9,7 +9,10 @@ namespace PH.WorkingDaysAndTimeUtility
 {
     public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
     {
+        public TimeSlotConfig TimeSlotConfig;
+
         public readonly WeekDaySpan WorkWeekConfiguration;
+
         public readonly List<DayOfWeek> WorkingDaysInWeek;
         public readonly List<AHolyDay> Holidays;
 
@@ -58,7 +61,16 @@ namespace PH.WorkingDaysAndTimeUtility
 
                 throw new ArgumentException("Invalid workWeekConfiguration",agEx);
             }
-            
+
+            TimeSlotConfig = new TimeSlotConfig();
+        }
+
+        public void SetTimeSlotConfig(TimeSlotConfig config)
+        {
+            //TODO: check
+
+            TimeSlotConfig = config;
+
         }
 
         /// <summary>
@@ -386,6 +398,172 @@ namespace PH.WorkingDaysAndTimeUtility
             }
         }
 
+
+        #region WorkeTimeSliceResult
+
+        
+        internal class InternalElapsedFactor
+        {
+            public DateTime Begin { get; set; }
+            public bool IfWorkingTime { get; set; }
+            public double SecondsAmount { get; set; }
+            
+        }
+
+        private List<DateTimeSlot> BuildDateTimeSlot(List<TimeSlot> slots, DateTime start, DateTime end)
+        {
+            var list = slots.Select(x => DateTimeSlot.Build(x, start)).ToList();
+            var mid  = list.Where(x => x.DateTimeEnd >= start && x.DateTimeStart <= end).ToList();
+
+            return mid
+                       .OrderBy(x => x.DateTimeStart)
+                       .ThenBy(x => x.DateTimeEnd).ToList();
+        }
+
+        public WorkedTimeSliceResult SplitWorkedTimeInFactors(DateTime start, DateTime end)
+        {
+            if (start >= end)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), start,
+                                                      $"End Time '{end:O}' must be greather than Start Time '{start:O}'");
+            }
+
+            if (end.Date != start.Date)
+            {
+                throw new ArgumentOutOfRangeException(nameof(end), end, $"End must be on same Date of Start");
+            }
+
+            if (null == WorkWeekConfiguration)
+            {
+                throw new ArgumentNullException(nameof(WorkWeekConfiguration), "WorkWeekConfiguration Config mandatory");
+            }
+
+            if (null == TimeSlotConfig)
+            {
+                throw new ArgumentNullException(nameof(WorkWeekConfiguration), "TimeSlotConfig Config mandatory");
+            }
+
+            if (!TimeSlotConfig.TimesDictionary.ContainsKey(start.DayOfWeek))
+            {
+                throw new ArgumentNullException(nameof(WorkWeekConfiguration), $"TimeSlotConfig Config not found for '{start.DayOfWeek}'");
+            }
+
+            TimeSpan totalDuration = end - start;
+
+            WorkedTimeSliceResult result = new WorkedTimeSliceResult()
+            {
+                Start         = start,
+                End           = end,
+                TotalDuration = totalDuration
+            };
+
+
+
+            List<TimeSlot> slotsi     = TimeSlotConfig.TimesDictionary[start.DayOfWeek];
+            
+            bool           isAWorkDay = this.IsAWorkDay(start);
+
+            if (!isAWorkDay && null == TimeSlotConfig.HolyDaySlots && TimeSlotConfig.HolyDaySlots.Count > 0)
+            {
+                slotsi = TimeSlotConfig.HolyDaySlots;
+            }
+
+            var slots = BuildDateTimeSlot(slotsi, start, end);
+
+            var s = start;
+
+            Dictionary<TimeSlot, InternalElapsedFactor> secsPerSlots = new Dictionary<TimeSlot, InternalElapsedFactor>();
+            List<WorkeTimeSlice> sliceResults = new List<WorkeTimeSlice>();
+
+
+            for (int i = 0; i < totalDuration.TotalSeconds; i++)
+            {
+
+                foreach (var timeSlot in slots)
+                {
+                    if (timeSlot.InSlot(s))
+                    {
+                        if (secsPerSlots.ContainsKey(timeSlot))
+                        {
+                            InternalElapsedFactor ifa = secsPerSlots[timeSlot];
+                            ifa.SecondsAmount      += 1;
+                            secsPerSlots[timeSlot] =  ifa;
+                        }
+                        else
+                        {
+                            bool ifWorkTime = false;
+                            if (isAWorkDay)
+                            {
+                                ifWorkTime = this.IfWorkingMoment(s, out var endNotUset0, out var endNotUset1);
+                            }
+                            InternalElapsedFactor ifa = new InternalElapsedFactor() {Begin = s, SecondsAmount = 1, IfWorkingTime = ifWorkTime};
+                            secsPerSlots.Add(timeSlot, ifa);
+                        }
+                        break;
+                    }
+
+                }
+
+                s = s.AddSeconds(1);
+            }
+
+            //while (s < end)
+            //{
+            //    foreach (var timeSlot in slots)
+            //    {
+            //        if (timeSlot.InSlot(s))
+            //        {
+            //            if (secsPerSlots.ContainsKey(timeSlot))
+            //            {
+            //                double a = secsPerSlots[timeSlot];
+            //                a                           += 1;
+            //                secsPerSlots[timeSlot] =  a;
+            //            }
+            //            else
+            //            {
+            //                secsPerSlots.Add(timeSlot,1);
+            //            }
+            //            break;
+            //        }
+                    
+            //    }
+
+            //    s = s.AddSeconds(1);
+            //}
+
+
+           
+            foreach (var keyValuePair in secsPerSlots.OrderBy(x => x.Value.Begin))
+            {
+
+                double f     = isAWorkDay ? keyValuePair.Key.Factor : keyValuePair.Key.HolyDayFactor;
+
+                sliceResults.Add(new WorkeTimeSlice()
+                {
+                    Start      = keyValuePair.Value.Begin,
+                    Duration   = TimeSpan.FromSeconds(keyValuePair.Value.SecondsAmount),
+                    Factor     = f,
+                    OnHolyDay  = !isAWorkDay,
+                    OnWorkTime = keyValuePair.Value.IfWorkingTime,
+                    TimeSlot   = keyValuePair.Key
+                });
+
+
+            }
+
+
+            result.WorkSlices = sliceResults.ToArray();
+
+            return result;
+
+
+        }
+
+       
+
+        #endregion
+
+      
 
         #region private methods
 
