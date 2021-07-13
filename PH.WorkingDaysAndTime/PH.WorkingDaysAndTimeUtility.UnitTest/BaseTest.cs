@@ -49,16 +49,27 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.False(notSymm.Symmetrical);
         }
 
+
+
         protected WeekDaySpan GetSimpleWeek()
         {
-            var wts1 = new WorkTimeSpan() { Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0) };
+            //var off0 = new List<NoWorkTimeSpan>()
+            //{
+            //    new NoWorkTimeSpan(1, 1.1, new TimeSpan(0, 0, 0), new TimeSpan(8, 59, 59)),
+            //    new NoWorkTimeSpan(2, 2.2, new TimeSpan(13, 01, 0), new TimeSpan(13, 59, 59)),
+            //    new NoWorkTimeSpan(3, 3.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 00, 00)),
+            //    new NoWorkTimeSpan(4, 4.4, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59))
+            //};
+
+            var wts1 = new WorkTimeSpan() { Start = new TimeSpan(9, 0, 0), End = new TimeSpan(13, 0, 0)  };
+
             var wts2 = new WorkTimeSpan() { Start = new TimeSpan(14, 0, 0), End = new TimeSpan(18, 0, 0) };
             var wts = new List<WorkTimeSpan>() { wts1, wts2 };
             var week = new WeekDaySpan()
             {
                 WorkDays = new Dictionary<DayOfWeek, WorkDaySpan>()
                 {
-                    {DayOfWeek.Monday, new WorkDaySpan() {TimeSpans = wts}}
+                    {DayOfWeek.Monday, new WorkDaySpan() {TimeSpans = wts }}
                     ,
                     {DayOfWeek.Tuesday, new WorkDaySpan() {TimeSpans = wts}}
                     ,

@@ -13,15 +13,21 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// </summary>
         public List<WorkTimeSpan> TimeSpans { get; set; }
 
+        //public List<NoWorkTimeSpan> NoWorkTimeSpans { get; set; }
+
         public WorkDaySpan()
             :this(new List<WorkTimeSpan>())
         {
+          
         }
 
         public WorkDaySpan(List<WorkTimeSpan> spans)
         {
-            TimeSpans = spans;
+            TimeSpans       = spans;
+          
         }
+
+    
 
         /// <summary>
         /// Get Working Minutes Per Day
