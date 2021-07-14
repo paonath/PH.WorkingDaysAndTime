@@ -2,9 +2,9 @@
   <PropertyGroup>
 	<Authors>Paolo Innocenti</Authors>
 	<Copyright>Copyright 2021 (c) Paolo Innocenti - paonath@gmail.com </Copyright>    
-	<AssemblyVersion>2.0.7</AssemblyVersion>
-    <FileVersion>2.0.7</FileVersion>
-    <Version>2.0.7</Version>
+	<AssemblyVersion>2.0.8</AssemblyVersion>
+    <FileVersion>2.0.8</FileVersion>
+    <Version>2.0.8</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

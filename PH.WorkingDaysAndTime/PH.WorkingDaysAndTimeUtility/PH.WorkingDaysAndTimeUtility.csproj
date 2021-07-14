@@ -15,13 +15,14 @@
 
       The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
     <PackageReleaseNotes>
-      Now able to split a Worked times into slices (ordinary, extraordinary, etc.)
+      Fix time splitting bugs.
+      Now able to determine if given date is holyday
     </PackageReleaseNotes>
 
     
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan, time-slices</PackageTags>
 
-    <PackageVersion>2.0.7</PackageVersion>
+    <PackageVersion>2.0.8</PackageVersion>
     <Authors>Paolo Innocenti</Authors>
     <Copyright>Copyright PH 2021 (c) paonath@gmail.com. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/paonath/PH.WorkingDaysAndTime</RepositoryUrl>

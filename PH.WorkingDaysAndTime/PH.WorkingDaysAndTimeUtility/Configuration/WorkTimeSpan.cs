@@ -73,7 +73,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
                 End           = slot.End,
                 Factor        = slot.Factor,
                 Key           = slot.Key,
-                HolyDayFactor = slot.HolyDayFactor
+
             };
         }
         /// <summary>If Datetime in the slot.</summary>
@@ -83,6 +83,14 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         {
             
             return d <= DateTimeEnd && d >= DateTimeStart;
+        }
+
+        //public string RuntimeDescription => $"{Key} '{DateTimeStart.DayOfWeek}' {DateTimeStart:O}";
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"{Key} '{DateTimeStart.DayOfWeek}' {DateTimeStart:O}";
         }
     }
 
@@ -95,9 +103,9 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// <value>The factor.</value>
         public double Factor { get; set; }
 
-        /// <summary>Gets or sets the holy day factor if work on this time slice.</summary>
-        /// <value>The holy day factor.</value>
-        public double HolyDayFactor { get; set; }
+        ///// <summary>Gets or sets the holy day factor if work on this time slice.</summary>
+        ///// <value>The holy day factor.</value>
+        //public double HolyDayFactor { get; set; }
 
         /// <summary>
         /// Starting Time for No-Work time slice
@@ -114,15 +122,15 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         {
              
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeSlot"/> class.
         /// </summary>
         /// <param name="factor">The factor.</param>
-        /// <param name="holyDayFactor">The holy day factor.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public TimeSlot(double factor, double holyDayFactor, TimeSpan start, TimeSpan end)
-            :this(null,factor,holyDayFactor,start,end)
+        public TimeSlot(double factor, TimeSpan start, TimeSpan end)
+            :this(null,factor,start,end)
         {
            
         }
@@ -132,14 +140,13 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// </summary>
         /// <param name="key">The key.</param>
         /// <param name="factor">The factor.</param>
-        /// <param name="holyDayFactor">The holy day factor.</param>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public TimeSlot(string key,double factor, double holyDayFactor, TimeSpan start, TimeSpan end)
+        public TimeSlot(string key,double factor, TimeSpan start, TimeSpan end)
         {
             Key           = key;
             Factor        = factor;
-            HolyDayFactor = holyDayFactor;
+            //HolyDayFactor = holyDayFactor;
             Start         = start;
             End           = end;
         }
@@ -156,7 +163,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return ($"TimeSlot  {Start:c} {End:c}").GetHashCode();
+            return ($"TimeSlot{ToString()}").GetHashCode();
         }
 
         /// <summary>If Datetime in the slot.</summary>
@@ -168,6 +175,31 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             var e = new DateTime(d.Year, d.Month, d.Day, End.Hours, End.Minutes, End.Seconds);
             return d <= e && d >= s;
         }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"{Key} {Start:c} {End:c}";
+        }
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="OrdinaryTimeSlot"/> class: is a <see cref="TimeSlot"/> with <see cref="TimeSlot.Factor"/> fixed to 1.0.
+    /// </summary>
+    /// <seealso cref="PH.WorkingDaysAndTimeUtility.Configuration.TimeSlot" />
+    public class OrdinaryTimeSlot : TimeSlot
+    {
+        public OrdinaryTimeSlot()
+        {
+            Factor = (double)1.0;
+        }
+
+        public OrdinaryTimeSlot(string key, TimeSpan start, TimeSpan end) : base(key,1.0,start, end)
+        {
+            
+        }
+        
     }
 
     public class WorkeTimeSlice
