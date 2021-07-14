@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using PH.WorkingDaysAndTimeUtility.Configuration;
 using Xunit;
@@ -17,76 +18,42 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                 TimesDictionary = new Dictionary<DayOfWeek, List<TimeSlot>>()
             };
 
-
-
-            cfg.TimesDictionary.Add(DayOfWeek.Monday, new List<TimeSlot>()
+            var l = new List<TimeSlot>()
             {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
-            });
+                new TimeSlot("Straordinario feriale notturno  ", 1.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno    ", 1.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
+                new OrdinaryTimeSlot("Ordinario                    ", new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno   2", 1.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
+                new TimeSlot("Straordinario feriale notturno 2", 1.1, new TimeSpan(20, 01, 0),
+                             new TimeSpan(23, 59, 59)),
+            };
 
-            cfg.TimesDictionary.Add(DayOfWeek.Tuesday, new List<TimeSlot>()
-            {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-            });
+            cfg.TimesDictionary.Add(DayOfWeek.Monday, l);
 
-            cfg.TimesDictionary.Add(DayOfWeek.Wednesday, new List<TimeSlot>()
-            {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
-            });
+            cfg.TimesDictionary.Add(DayOfWeek.Tuesday, l);
+
+            cfg.TimesDictionary.Add(DayOfWeek.Wednesday,l);
 
             cfg.TimesDictionary.Add(DayOfWeek.Thursday, new List<TimeSlot>()
             {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
+                new TimeSlot("Straordinario feriale notturno  ", 1.1,  new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno    ", 1.3,  new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
+                new TimeSlot("Ordinario                       ", 1.0,  new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno   2", 1.3,  new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
+                new TimeSlot("Straordinario feriale notturno 2", 1.1,  new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
             });
 
-            cfg.TimesDictionary.Add(DayOfWeek.Friday, new List<TimeSlot>()
-            {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
-            });
-            cfg.TimesDictionary.Add(DayOfWeek.Saturday, new List<TimeSlot>()
-            {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
-            });
-            cfg.TimesDictionary.Add(DayOfWeek.Sunday, new List<TimeSlot>()
-            {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
-            });
+            cfg.TimesDictionary.Add(DayOfWeek.Friday,l);
+            cfg.TimesDictionary.Add(DayOfWeek.Saturday, l);
+            cfg.TimesDictionary.Add(DayOfWeek.Sunday, l);
 
             cfg.HolyDaySlots = new List<TimeSlot>()
             {
-                new TimeSlot("Straordinario feriale notturno  ", 1.1, 2.1, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno    ", 1.3, 2.3, new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
-                new TimeSlot("Ordinario                       ", 1.0, 2.0, new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
-                new TimeSlot("Straordinario feriale diurno   2", 1.3, 2.3, new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
-                new TimeSlot("Straordinario feriale notturno 2", 1.1, 2.1, new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
+                new TimeSlot("Straordinario feriale notturno  ", 1.3,  new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno    ", 1.3,  new TimeSpan(6, 01, 0), new TimeSpan(8, 59, 59)),
+                new TimeSlot("Ordinario                       ", 1.3,  new TimeSpan(9, 0, 0), new TimeSpan(18, 0, 0)),
+                new TimeSlot("Straordinario feriale diurno   2", 1.3,  new TimeSpan(18, 01, 0), new TimeSpan(20, 0, 0)),
+                new TimeSlot("Straordinario feriale notturno 2", 1.3,  new TimeSpan(20, 01, 0), new TimeSpan(23, 59, 59)),
             };
 
             return cfg;
@@ -168,11 +135,11 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             
                 var slots = new List<TimeSlot>()
                 {
-                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0, 2.0, new TimeSpan(0, 0, 0), new TimeSpan(5, 59, 59)),
-                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4, 1.4, new TimeSpan(6, 00, 0), new TimeSpan(8, 59, 59)),
-                    new TimeSlot($"ORDINARIO"                 , 1.0, 1.4, new TimeSpan(9, 0, 0), new TimeSpan(17, 59, 59)),
-                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4, 1.4, new TimeSpan(18, 00, 0), new TimeSpan(19,59, 59)),
-                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0, 2.0, new TimeSpan(20, 00, 0), new TimeSpan(23, 59, 59))
+                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0,  new TimeSpan(0, 0, 0), new TimeSpan(5, 59, 59)),
+                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4,  new TimeSpan(6, 00, 0), new TimeSpan(8, 59, 59)),
+                    new OrdinaryTimeSlot($"ORDINARIO"              ,  new TimeSpan(9, 0, 0), new TimeSpan(17, 59, 59)),
+                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4,  new TimeSpan(18, 00, 0), new TimeSpan(19,59, 59)),
+                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0,  new TimeSpan(20, 00, 0), new TimeSpan(23, 59, 59))
                 };
                 timecfg.TimesDictionary.Add(DayOfWeek.Monday,slots);
                 timecfg.TimesDictionary.Add(DayOfWeek.Tuesday,slots);
@@ -183,16 +150,16 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
 
                 timecfg.TimesDictionary.Add(DayOfWeek.Saturday, new List<TimeSlot>()
                 {
-                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0, 2.0, new TimeSpan(0, 0, 0), new TimeSpan(5, 59, 59)),
-                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4, 1.4, new TimeSpan(6, 00, 0), new TimeSpan(19, 59, 59)),
-                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0, 2.0, new TimeSpan(20, 00, 0), new TimeSpan(23, 59, 59))
+                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0,  new TimeSpan(0, 0, 0), new TimeSpan(5, 59, 59)),
+                    new TimeSlot($"STRAORD_FERIALE_DIURNO"    , 1.4,  new TimeSpan(6, 00, 0), new TimeSpan(19, 59, 59)),
+                    new TimeSlot($"STRAORD_FERIALE_NOTTURNO"  , 2.0,  new TimeSpan(20, 00, 0), new TimeSpan(23, 59, 59))
                 });
 
                 var sunDay =   new List<TimeSlot>()
                 {
-                    new TimeSlot($"STRAORD_FESTIVO_NOTTURNO"  , 2.0, 2.0, new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
-                    new TimeSlot($"STRAORD_FESTIVO_DIURNO"    , 1.4, 1.4, new TimeSpan(6, 00, 0), new TimeSpan(19, 59, 59)),
-                    new TimeSlot($"STRAORD_FESTIVO_NOTTURNO"  , 2.0,2.0, new TimeSpan(20, 00, 01), new TimeSpan(23, 59, 59))
+                    new TimeSlot($"STRAORD_FESTIVO_NOTTURNO"  , 2.0,  new TimeSpan(0, 0, 0), new TimeSpan(6, 0, 0)),
+                    new TimeSlot($"STRAORD_FESTIVO_DIURNO"    , 1.4,  new TimeSpan(6, 00, 0), new TimeSpan(19, 59, 59)),
+                    new TimeSlot($"STRAORD_FESTIVO_NOTTURNO"  , 2.0,  new TimeSpan(20, 00, 01), new TimeSpan(23, 59, 59))
                 };
 
                 timecfg.TimesDictionary.Add(DayOfWeek.Sunday, sunDay);
@@ -239,12 +206,16 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                                                           .Select(x => x.Duration.TotalHours).Sum();
 
 
+                //var aHoly = u.SplitWorkedTimeInFactors(new DateTime(2021, 6, 2, 0, 0, 0),
+                //                                       new DateTime(2021, 6, 2, 23, 59, 59));
+
                 var aHoly = u.SplitWorkedTimeInFactors(new DateTime(2021, 6, 2, 0, 0, 0),
-                                                       new DateTime(2021, 6, 2, 23, 59, 59));
+                                                       new DateTime(2021, 6, 2, 0, 0, 2));
 
 
             Assert.Equal((double)9, ordinario);
-            Assert.Equal((double)9, ordinario);
+            Debug.Assert(aHoly.WorkSlices != null, "aHoly.WorkSlices != null");
+            Assert.Equal(true, aHoly.WorkSlices.FirstOrDefault().OnHolyDay);
         }
     }
 }

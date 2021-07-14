@@ -7,7 +7,12 @@ using PH.WorkingDaysAndTimeUtility.Extensions;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
-    public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <seealso cref="PH.WorkingDaysAndTimeUtility.IWorkingDaysAndTimeUtility" />
+    /// <seealso cref="PH.WorkingDaysAndTimeUtility.ISplitTimes" />
+    public class WorkingDaysAndTimeUtility : IWorkingDaysAndTimeUtility, ISplitTimes
     {
         public TimeSlotConfig TimeSlotConfig;
 
@@ -358,6 +363,21 @@ namespace PH.WorkingDaysAndTimeUtility
             return true;
         }
 
+        /// <summary>
+        /// Determines whether if given <see cref="DateTime"/> is holy day(do not check for Hours/Minutes, jut Day)..
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns>
+        ///   <c>true</c> if given <see cref="DateTime"/> is holy day; otherwise, <c>false</c>.
+        /// </returns>
+        public bool IsHolyDay(DateTime day)
+        {
+            var holyDays = this.CalculateDaysForExclusions(day.Year);
+            return holyDays.Any(x => x.Year == day.Year && x.Month == day.Month && x.Day == day.Day); 
+            
+
+        }
+
 
         public static bool TryGetFromConfig(WorkingDaysConfig cfg, out WorkingDaysAndTimeUtility u)
         {
@@ -420,6 +440,46 @@ namespace PH.WorkingDaysAndTimeUtility
                        .ThenBy(x => x.DateTimeEnd).ToList();
         }
 
+
+        private bool IfWorkingDateTimeForSplit(DateTime d)
+        {
+            var b           = WorkWeekConfiguration.WorkDays.ContainsKey(d.DayOfWeek);
+            if (!b)
+            {
+                return false;
+            }
+
+            var  workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
+            bool final       = false;
+            foreach (var workTimeSpan in workDaySpan.TimeSpans)
+            {
+                if (workTimeSpan.IsStrictWorkInstant(d.Hour, d.Minute,d.Second))
+                {
+                    final = true;
+                    break;
+                    
+                }
+            }
+
+            return final;
+        }
+
+        /// <summary>Splits the worked time in factors.</summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// start - End Time '{end:O}' must be greather than Start Time '{start:O}'
+        /// or
+        /// end - End must be on same Date of Start
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// WorkWeekConfiguration - WorkWeekConfiguration Config mandatory
+        /// or
+        /// WorkWeekConfiguration - TimeSlotConfig Config mandatory
+        /// or
+        /// WorkWeekConfiguration - TimeSlotConfig Config not found for '{start.DayOfWeek}'
+        /// </exception>
         public WorkedTimeSliceResult SplitWorkedTimeInFactors(DateTime start, DateTime end)
         {
             if (start >= end)
@@ -460,10 +520,10 @@ namespace PH.WorkingDaysAndTimeUtility
 
 
             List<TimeSlot> slotsi     = TimeSlotConfig.TimesDictionary[start.DayOfWeek];
-            
-            bool           isAWorkDay = this.IsAWorkDay(start);
 
-            if (!isAWorkDay && null == TimeSlotConfig.HolyDaySlots && TimeSlotConfig.HolyDaySlots.Count > 0)
+            bool isAWorkDay = !this.IsHolyDay(start.Date);
+
+            if (!isAWorkDay && null != TimeSlotConfig.HolyDaySlots && TimeSlotConfig.HolyDaySlots.Any())
             {
                 slotsi = TimeSlotConfig.HolyDaySlots;
             }
@@ -494,7 +554,7 @@ namespace PH.WorkingDaysAndTimeUtility
                             bool ifWorkTime = false;
                             if (isAWorkDay)
                             {
-                                ifWorkTime = this.IfWorkingMoment(s, out var endNotUset0, out var endNotUset1);
+                                ifWorkTime = IfWorkingDateTimeForSplit(s);
                             }
                             InternalElapsedFactor ifa = new InternalElapsedFactor() {Begin = s, SecondsAmount = 1, IfWorkingTime = ifWorkTime};
                             secsPerSlots.Add(timeSlot, ifa);
@@ -535,14 +595,13 @@ namespace PH.WorkingDaysAndTimeUtility
            
             foreach (var keyValuePair in secsPerSlots.OrderBy(x => x.Value.Begin))
             {
-
-                double f     = isAWorkDay ? keyValuePair.Key.Factor : keyValuePair.Key.HolyDayFactor;
+                
 
                 sliceResults.Add(new WorkeTimeSlice()
                 {
                     Start      = keyValuePair.Value.Begin,
                     Duration   = TimeSpan.FromSeconds(keyValuePair.Value.SecondsAmount),
-                    Factor     = f,
+                    Factor     = keyValuePair.Key.Factor,
                     OnHolyDay  = !isAWorkDay,
                     OnWorkTime = keyValuePair.Value.IfWorkingTime,
                     TimeSlot   = keyValuePair.Key
