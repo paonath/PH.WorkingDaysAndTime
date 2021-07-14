@@ -15,5 +15,13 @@ namespace PH.WorkingDaysAndTimeUtility.Extensions
 
             return d0 <= d2 && d2 <= d1;
         }
+        public static bool IsStrictWorkInstant(this WorkTimeSpan span, int hours, int minutes,int seconds)
+        {
+            DateTime d0 = new DateTime(2000,1,3,span.Start.Hours,span.Start.Minutes,0);
+            DateTime d1 = new DateTime(2000,1,3,span.End.Hours,span.End.Minutes,0);
+            DateTime d2 = new DateTime(2000,1,3,hours,minutes,seconds);
+
+            return d0 <= d2 && d2 < d1;
+        }
     }
 }

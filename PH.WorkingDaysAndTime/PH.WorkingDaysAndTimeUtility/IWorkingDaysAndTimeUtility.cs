@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PH.WorkingDaysAndTimeUtility.Configuration;
 
 namespace PH.WorkingDaysAndTimeUtility
 {
@@ -121,5 +122,44 @@ namespace PH.WorkingDaysAndTimeUtility
         /// </returns>
         bool IsAWorkDay(DateTime day);
 
+        /// <summary>
+        /// Determines whether if given <see cref="DateTime"/> is holy day(do not check for Hours/Minutes, jut Day)..
+        /// </summary>
+        /// <param name="day">The day.</param>
+        /// <returns>
+        ///   <c>true</c> if given <see cref="DateTime"/> is holy day; otherwise, <c>false</c>.
+        /// </returns>
+        bool IsHolyDay(DateTime day);
+
+    }
+
+    /// <summary>
+    /// A tiny utility for split a <see cref="TimeSpan"/> into worked-slices, based on ordinary or extraordinary time table.
+    ///
+    /// Based on <see cref="IWorkingDaysAndTimeUtility"/> this utility do not use the same work-day config and algorithm.
+    /// </summary>
+    public interface ISplitTimes
+    {
+        /// <summary>Sets the time slot configuration.</summary>
+        /// <param name="config">The configuration.</param>
+        void SetTimeSlotConfig(TimeSlotConfig config);
+
+        /// <summary>Splits the worked time in factors.</summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// start - End Time '{end:O}' must be greather than Start Time '{start:O}'
+        /// or
+        /// end - End must be on same Date of Start
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// WorkWeekConfiguration - WorkWeekConfiguration Config mandatory
+        /// or
+        /// WorkWeekConfiguration - TimeSlotConfig Config mandatory
+        /// or
+        /// WorkWeekConfiguration - TimeSlotConfig Config not found for '{start.DayOfWeek}'
+        /// </exception>
+        WorkedTimeSliceResult SplitWorkedTimeInFactors(DateTime start, DateTime end);
     }
 }
