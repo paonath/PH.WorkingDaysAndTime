@@ -84,6 +84,14 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             
             return d <= DateTimeEnd && d >= DateTimeStart;
         }
+
+        //public string RuntimeDescription => $"{Key} '{DateTimeStart.DayOfWeek}' {DateTimeStart:O}";
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"{Key} '{DateTimeStart.DayOfWeek}' {DateTimeStart:O}";
+        }
     }
 
     /// <summary>
@@ -156,7 +164,7 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            return ($"TimeSlot  {Start:c} {End:c}").GetHashCode();
+            return ($"TimeSlot{ToString()}").GetHashCode();
         }
 
         /// <summary>If Datetime in the slot.</summary>
@@ -167,6 +175,13 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
             var s = new DateTime(d.Year, d.Month, d.Day, Start.Hours, Start.Minutes, Start.Seconds);
             var e = new DateTime(d.Year, d.Month, d.Day, End.Hours, End.Minutes, End.Seconds);
             return d <= e && d >= s;
+        }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return $"{Key} {Start:c} {End:c}";
         }
     }
 
