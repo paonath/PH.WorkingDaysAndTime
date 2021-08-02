@@ -20,7 +20,7 @@ The package is available on  [nuget](https://www.nuget.org/packages/PH.WorkingDa
 
 ## Code Examples
 
-**AddWorkingDays(DateTime start, int days)**
+### AddWorkingDays(DateTime start, int days)
 ```c#
 //this is the configuration of a work-week: 8h/day from monday to friday
 var wts1 = new WorkTimeSpan() 
@@ -65,7 +65,7 @@ var result = utility.AddWorkingDays(new DateTime(2015,6,1), 3);
 //result is Jun 5, 2015 (see holidays list) 
 ```
 
-**GetWorkingDaysBetweenTwoWorkingDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)**
+### GetWorkingDaysBetweenTwoWorkingDateTimes(DateTime start, DateTime end, bool includeStartAndEnd = true)
 ```c#
 var start = new DateTime(2015, 12, 31, 9, 0, 0);
 var end = new DateTime(2016, 1, 7, 9, 0, 0);
@@ -77,7 +77,7 @@ var utility = new WorkingDaysAndTimeUtility(weekConf, GetItalianHolidays());
 var r = utility.GetWorkingDaysBetweenTwoWorkingDateTimes(start, end);
 ```
 
-**Testing if given date is Working-Datetime**
+### Testing if given date is Working-Datetime
 ```c#
 [Fact]
 public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
@@ -100,7 +100,7 @@ public void Get_IfWorkingDay_OnTuesday_OnSimpleWeek_ReturnTrue()
 }
 ```
 
-**Testing if given date is Working-Date**
+### Testing if given date is Working-Date
 ```c#
 [Fact]
 public void TestIfAWorkDay()
@@ -121,7 +121,7 @@ public void TestIfAWorkDay()
 }
 ```
 
-**Split Worked Time**
+### Split Worked Time
 ```c#
  public static TimeSlotConfig GetTimeSlotConfig()
         {
@@ -221,7 +221,7 @@ var res = utility.SplitWorkedTimeInFactors(n, e);
 var hours = res.TotalDuration.TotalHours;
 ```
 
-**Implements a multi-calculated holiday**
+### Implements a multi-calculated holiday
 ```c#
 public class WorkingOnSaturdayIfOdd : MultiCalculatedHoliDay
     {
@@ -306,7 +306,7 @@ public class WorkingOnSaturdayIfOdd : MultiCalculatedHoliDay
 
 ## Code Configuration Examples
 
-**Use of WorkingDaysConfig**
+### Use of WorkingDaysConfig
 ```c#
 //note thats w is WeekDaySpan and l is List<AHolyDay>
 //cfg is Json serializable
@@ -314,7 +314,7 @@ var cfg = new WorkingDaysConfig(w, l);
 
 ```
 
-**Map-Config Style**
+### Map-Config Style
 ```c#
 var cfg = new WorkingDaysConfig()
                         .Week(new WeekDaySpan()
