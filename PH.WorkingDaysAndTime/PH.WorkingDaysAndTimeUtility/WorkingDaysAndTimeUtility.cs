@@ -898,7 +898,15 @@ namespace PH.WorkingDaysAndTimeUtility
             {
                 try
                 {
-                    r.Add(day.Calculate(year));
+                    if (day is MultiCalculatedHoliDay multi)
+                    {
+                        r.AddRange(multi.CalculateList(year));
+                    }
+                    else
+                    {
+                        r.Add(day.Calculate(year));    
+                    }
+                    
                 }
                 catch 
                 {
