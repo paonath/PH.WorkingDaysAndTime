@@ -2,18 +2,9 @@
   <PropertyGroup>
 	<Authors>Paolo Innocenti</Authors>
 	<Copyright>Copyright 2021 (c) Paolo Innocenti - paonath@gmail.com </Copyright>    
-	<AssemblyVersion>2.0.9</AssemblyVersion>
-    <FileVersion>2.0.9</FileVersion>
-    <Version>2.0.9</Version>
+	<AssemblyVersion>2.0.10</AssemblyVersion>
+    <FileVersion>2.0.10</FileVersion>
+    <Version>2.0.10</Version>
   </PropertyGroup>
-
-  <!--<PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <SourceRevisionId>build-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <SourceRevisionId>rel-$([System.DateTime]::UtcNow.ToString("yyyyMMdd"))</SourceRevisionId>
-  </PropertyGroup>-->
-
 </Project>
 
