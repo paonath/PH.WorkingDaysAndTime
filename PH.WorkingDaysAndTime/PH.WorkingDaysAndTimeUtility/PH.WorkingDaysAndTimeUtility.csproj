@@ -71,7 +71,7 @@
     <PropertyGroup>
       <RepositoryBranch>$(GitBranch)</RepositoryBranch>
       <RepositoryCommit>$(GitCommit)</RepositoryCommit>
-      <SourceRevisionId>$(GitBranch) $(Commit) $(BaseTag) rel-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+      <SourceRevisionId>$(GitBranch) $(GitCommit) $(GitBaseTag) rel-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
     </PropertyGroup>
   </Target>
  
