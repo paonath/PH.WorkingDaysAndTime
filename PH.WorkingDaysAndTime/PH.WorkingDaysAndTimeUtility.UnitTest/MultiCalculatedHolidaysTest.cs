@@ -53,9 +53,13 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
         }
     }
 
+    /// <summary>
+    /// An example implementation of <see cref="MultiCalculatedHoliDay"/>  
+    /// </summary>
+    /// <seealso cref="PH.WorkingDaysAndTimeUtility.Configuration.MultiCalculatedHoliDay" />
     public class WorkingOnSaturdayIfOdd : MultiCalculatedHoliDay
     {
-        public WorkingOnSaturdayIfOdd() : base(0, 0)
+        internal WorkingOnSaturdayIfOdd() : base(0, 0)
         {
         }
 
@@ -70,10 +74,12 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             var         last         = new DateTime(year +1, 1, 1, 0, 0, 0);
             CultureInfo myCI         = new CultureInfo("it-IT");
             var         baseHolidays = new List<DateTime>();
+            int         add          = 1;
             while (first < last)
             {
                 if (first.DayOfWeek == DayOfWeek.Saturday)
                 {
+                    add = 7;
                     var weekNumber = myCI.Calendar.GetWeekOfYear(first, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
                     if (weekNumber % 2 == 0)
                     {
@@ -81,7 +87,7 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
                     }
                 }
 
-                first = first.AddDays(1);
+                first = first.AddDays(add);
             }
 
             return baseHolidays;

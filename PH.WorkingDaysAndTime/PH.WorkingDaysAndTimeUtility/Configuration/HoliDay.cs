@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using PH.WorkingDaysAndTimeUtility.Converter;
 
@@ -148,33 +147,6 @@ namespace PH.WorkingDaysAndTimeUtility.Configuration
         public string AHolyDayToString()
         {
             return $"{GetHolyDayType().Name}" ;
-        }
-    }
-
-    public abstract class MultiCalculatedHoliDay : CalculatedHoliDay
-    {
-        
-        /// <summary>
-        /// It returns an instance of the data by year provided
-        /// </summary>
-        /// <param name="year">year provided</param>
-        /// <returns>DateTime</returns>
-        [Obsolete("For MultiCalculatedHoliDay use 'List<DateTime> CalculateList(int year);'", true)]
-#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
-        public override DateTime Calculate(int year)
-#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
-        {
-            throw new
-                NotSupportedException($"For {nameof(MultiCalculatedHoliDay)} use 'List<DateTime> CalculateList(int year);'");
-        }
-
-        /// <summary>Calculates the list of MultiCalculatedHoliDays for the given year.</summary>
-        /// <param name="year">The year.</param>
-        /// <returns></returns>
-        public abstract List<DateTime> CalculateList(int year);
-
-        protected MultiCalculatedHoliDay(int day, int mont) : base(day, mont)
-        {
         }
     }
 
