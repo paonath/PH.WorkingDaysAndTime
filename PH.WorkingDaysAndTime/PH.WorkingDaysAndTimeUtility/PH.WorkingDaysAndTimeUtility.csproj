@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -22,6 +23,8 @@
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan, time-slices, holiday</PackageTags>
 
     <PackageVersion>2.0.9</PackageVersion>
+   
+
     <Authors>Paolo Innocenti</Authors>
     <Copyright>Copyright PH 2021 (c) paonath@gmail.com. All rights reserved.</Copyright>
     <RepositoryUrl>https://github.com/paonath/PH.WorkingDaysAndTime</RepositoryUrl>
@@ -42,16 +45,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+    <PackageReference Include="GitInfo" Version="2.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="[1.0.0,)" PrivateAssets="All" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="[11.0.2,)" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet pack $(ProjectPath) --no-build --include-source --include-symbols --output $(SolutionDir)PHTempPackages\  " />
-    <Exec Command="nuget init $(SolutionDir)PHTempPackages\ $(SolutionDir)PHPackages\ " />
+  
+
+  <PropertyGroup Label="GitInfo Properties">
+    <GitThisAssembly>true</GitThisAssembly>
+    <GitThisAssemblyMetadata>true</GitThisAssemblyMetadata>
+
+  </PropertyGroup>
+
+
+
+  <Target Name="PopulateInfo" DependsOnTargets="GitInfo" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <RepositoryBranch>$(GitBranch)</RepositoryBranch>
+      <RepositoryCommit>$(GitCommit)</RepositoryCommit>
+      <SourceRevisionId>$(GitBranch) $(GitCommit) $(GitBaseTag) rel-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+    </PropertyGroup>
   </Target>
+ 
 </Project>

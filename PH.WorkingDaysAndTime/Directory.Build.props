@@ -7,13 +7,13 @@
     <Version>2.0.9</Version>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+  <!--<PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <SourceRevisionId>build-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <SourceRevisionId>rel-$([System.DateTime]::UtcNow.ToString("yyyyMMdd"))</SourceRevisionId>
-  </PropertyGroup>
+  </PropertyGroup>-->
 
 </Project>
 
