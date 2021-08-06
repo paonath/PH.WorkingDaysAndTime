@@ -16,13 +16,13 @@
 
       The application works only counting the dates forward and it is assumed that the date entered as the first parameter is a working day.</Description>
     <PackageReleaseNotes>
-      Now able to add multi-calculated holidays to your configuration
+      Just added git build info from https://github.com/devlooped/GitInfo
     </PackageReleaseNotes>
 
     
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan, time-slices, holiday</PackageTags>
 
-    <PackageVersion>2.0.9</PackageVersion>
+    <PackageVersion>2.0.10</PackageVersion>
    
 
     <Authors>Paolo Innocenti</Authors>
