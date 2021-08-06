@@ -57,23 +57,15 @@
     <PackageReference Include="Newtonsoft.Json" Version="[11.0.2,)" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="dotnet pack $(ProjectPath) --no-build --include-source --include-symbols --output $(SolutionDir)PHTempPackages\  " />
-    <Exec Command="nuget init $(SolutionDir)PHTempPackages\ $(SolutionDir)PHPackages\ " />
-  </Target>
+  
 
-  <!--<PropertyGroup>
-    <AssemblyInformationalVersion>-$([PH.WorkingDaysAndTimeUtility.ThisAssembly.Git.Branch])</AssemblyInformationalVersion>
-  </PropertyGroup>-->
   <PropertyGroup Label="GitInfo Properties">
     <GitThisAssembly>true</GitThisAssembly>
     <GitThisAssemblyMetadata>true</GitThisAssemblyMetadata>
-    <!--<InformationalVersion>$(GitTag)</InformationalVersion>-->
+
   </PropertyGroup>
 
-  <!--<PropertyGroup>
-    <SourceRevisionId>$(GitBranch)-$(GitCommit)-$(GitBaseTag)-$(GitTag)rel-$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
-  </PropertyGroup>-->
+
 
   <Target Name="PopulateInfo" DependsOnTargets="GitInfo" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
