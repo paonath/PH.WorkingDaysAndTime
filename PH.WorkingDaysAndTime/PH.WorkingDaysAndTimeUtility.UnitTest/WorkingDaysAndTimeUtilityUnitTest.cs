@@ -5,7 +5,42 @@ using Xunit;
 
 namespace PH.WorkingDaysAndTimeUtility.UnitTest
 {
-    public class WorkingDaysAndTimeUtilityUnitTest
+	public class Issue5Test : BaseTest
+	{
+        [Fact]
+		public void TestingIssue()
+		{
+			var wts1 = new WorkTimeSpan() { Start = new TimeSpan(08, 00, 0), End = new TimeSpan(12, 0, 0) };
+			var wts2 = new WorkTimeSpan() { Start = new TimeSpan(13, 30, 0), End = new TimeSpan(17, 30, 0) };
+			var wts  = new List<WorkTimeSpan>() { wts1, wts2 };
+
+			var start            = new DateTime(2023, 1, 11, 8, 0, 0);
+			var end              = new DateTime(2023, 1, 11, 10, 0, 0);
+			var italiansHoliDays = new List<AHolyDay>() { new EasterMonday() };
+			var week = new WeekDaySpan()
+			{
+				WorkDays = new Dictionary<DayOfWeek, WorkDaySpan>()
+				{
+					{ DayOfWeek.Monday, new WorkDaySpan() { TimeSpans    = wts } },
+					{ DayOfWeek.Tuesday, new WorkDaySpan() { TimeSpans   = wts } },
+					{ DayOfWeek.Wednesday, new WorkDaySpan() { TimeSpans = wts } },
+					{ DayOfWeek.Thursday, new WorkDaySpan() { TimeSpans  = wts } },
+					{ DayOfWeek.Friday, new WorkDaySpan() { TimeSpans    = wts } },
+					{ DayOfWeek.Saturday, new WorkDaySpan() { TimeSpans  = wts } }
+				}
+			};
+			var utility  = new WorkingDaysAndTimeUtility(week, italiansHoliDays);
+			//var result   = utility.AddWorkingDays(new DateTime(2023, 1, 13), 3);
+
+			var dateTime = new DateTime(2023, 1, 18, 12, 30, 22);
+			var result = utility.AddWorkingHours(dateTime, 1);
+
+            Assert.Equal(new DateTime(2023,1,18,14,30,22), result);
+		}
+
+	}
+
+	public class WorkingDaysAndTimeUtilityUnitTest
         : BaseTest
     {
 

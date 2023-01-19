@@ -121,43 +121,64 @@ namespace PH.WorkingDaysAndTimeUtility
         /// <returns>Result DateTime</returns>
         public DateTime AddWorkingHours(DateTime start, double hours)
         {
-            CheckWorkDayStart(start);
+	        var r = new DateTime(start.Ticks);
 
-            if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+            CheckWorkDayStart(r);
+
+            while (!IfWorkingMomentGettingNext(r, out DateTime nextStart))
             {
-                start = nextStart;
+	            r = r.AddMinutes(1);
             }
 
-
-            DateTime r = start;
-            var totMinutes = CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(start);
-            List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
-            double hh = hours * 60;
-
-            if (totMinutes <= hh && WorkWeekConfiguration.Symmetrical )
+            int            year      = start.Year;
+            List<DateTime> toExclude = CalculateDaysForExclusions(year);
+            for (int i = 0; i < 60 * hours; i++)
             {
-                #region Just for "Symmetrical" week
-
-                
-                var days = (int) (hh/totMinutes);
-                var otherMinutes = hh % totMinutes;
-                r = r.AddWorkingDays(days, toExclude, WorkingDaysInWeek);
-                    
-                if (otherMinutes > (double) 0)
-                {
-                    r = AddWorkingMinutes(r, otherMinutes, toExclude);
-                }
-                
-
-                #endregion
+	            r= AddWorkingMinutes(r, 1, toExclude);
+	            if (r.Year > year)
+	            {
+		            toExclude = CalculateDaysForExclusions(r.Year);
+	            }
             }
-            else
-            {
-                r = AddWorkingMinutes(r, totMinutes, toExclude);
 
-            }
-            
             return r;
+            //start = AddWorkingMinutes(start, 60 * hours)
+
+            //if (!IfWorkingMomentGettingNext(start, out DateTime nextStart))
+            //{
+            //    start = nextStart;
+            //}
+
+
+            //DateTime r = start;
+            //var totMinutes = CheckWorkTimeStartandGetTotalWorkingHoursForTheDay(start);
+            //List<DateTime> toExclude = CalculateDaysForExclusions(start.Year);
+            //double hh = hours * 60;
+
+            //if (totMinutes <= hh && WorkWeekConfiguration.Symmetrical )
+            //{
+            //    #region Just for "Symmetrical" week
+
+
+            //    var days = (int) (hh/totMinutes);
+            //    var otherMinutes = hh % totMinutes;
+            //    r = r.AddWorkingDays(days, toExclude, WorkingDaysInWeek);
+
+            //    if (otherMinutes > (double) 0)
+            //    {
+            //        r = AddWorkingMinutes(r, otherMinutes, toExclude);
+            //    }
+
+
+            //    #endregion
+            //}
+            //else
+            //{
+            //    r = AddWorkingMinutes(r, totMinutes, toExclude);
+
+        //}
+            
+        //    return r;
         }
 
         private DateTime AddWorkingMinutesNoCheck(DateTime start, double minutes)
@@ -750,7 +771,7 @@ namespace PH.WorkingDaysAndTimeUtility
                     {
                         
                         var ts = nextInterval.Start;
-                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);
+                        r = new DateTime(r.Year, r.Month, r.Day, ts.Hours, ts.Minutes, ts.Seconds);//.AddMinutes(1);
                     }
                     else
                     {
@@ -776,7 +797,13 @@ namespace PH.WorkingDaysAndTimeUtility
         private bool CheckIfWorkTime(DateTime d, out WorkTimeSpan nextInterval)
         {
             var workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
-            bool r = false;
+            var nextOutSpan    = WorkWeekConfiguration.WorkDays.Where(x => x.Key > d.DayOfWeek).Select(x => x.Value).FirstOrDefault();
+            if (null == nextOutSpan)
+            {
+	            nextOutSpan = WorkWeekConfiguration.WorkDays.FirstOrDefault().Value;
+            }
+
+            bool r           = false;
             nextInterval = null;
 
             if (null == workDaySpan)
@@ -786,33 +813,75 @@ namespace PH.WorkingDaysAndTimeUtility
             }
             else
             {
-                var orderdTimes = (from t in workDaySpan.TimeSpans
-                    orderby t.Start ascending, t.End ascending
-                    select t
-                    ).ToArray();
-                int counter = -1;
-                foreach (var ts in orderdTimes)
-                {
-                    counter++;
+	            var orderdTimes = workDaySpan.TimeSpans.OrderBy(x => x.Start).ThenBy(x => x.End).ToArray();
+	            int c           = 0;
+	            foreach (var ts in orderdTimes)
+	            {
 
-                    var s = new DateTime(d.Year, d.Month, d.Day, ts.Start.Hours, ts.Start.Minutes,
-                        ts.Start.Seconds);
-                    var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
-                        ts.End.Seconds);
-                    nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
-                    if (d == e)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        if (s <= d && d < e)
-                        {
-                            r = true;
-                            break;
-                        }
-                    }
-                }
+
+		            var start = new DateTime(d.Year, d.Month, d.Day, ts.Start.Hours, ts.Start.Minutes, ts.Start.Seconds);
+		            var end   = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes, ts.End.Seconds);
+
+		            if (d < end)
+		            {
+			            if (d >= start)
+			            {
+				            return true;
+			            }
+			            else
+			            {
+				            nextInterval = ts;
+			            }
+		            }
+
+		           
+
+		            //if (start <= d && d < end)
+		            //{
+			           // if (c <= orderdTimes.Length)
+			           // {
+				          //  nextInterval = orderdTimes[c];
+			           // }
+			           // else
+			           // {
+				          //  nextInterval = nextOutSpan.TimeSpans.OrderBy(x => x.Start).First();
+			           // }
+
+			           // return true;
+		            //}
+	            }
+
+	            return false;
+
+	            /*
+	            var orderdTimes = (from t in workDaySpan.TimeSpans
+	                orderby t.Start ascending, t.End ascending
+	                select t
+	                ).ToArray();
+	            int counter = -1;
+	            foreach (var ts in orderdTimes)
+	            {
+	                counter++;
+
+	                var s = new DateTime(d.Year, d.Month, d.Day, ts.Start.Hours, ts.Start.Minutes,
+	                    ts.Start.Seconds);
+	                var e = new DateTime(d.Year, d.Month, d.Day, ts.End.Hours, ts.End.Minutes,
+	                    ts.End.Seconds);
+	                nextInterval = counter == orderdTimes.Length - 1 ? null : orderdTimes[counter + 1];
+	                if (d == e)
+	                {
+	                    break;
+	                }
+	                else
+	                {
+	                    if (s <= d && d < e)
+	                    {
+	                        r = true;
+	                        break;
+	                    }
+	                }
+	            }
+	            */
             }
             
             return r;
