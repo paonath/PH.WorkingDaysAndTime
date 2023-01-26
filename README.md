@@ -121,6 +121,24 @@ public void TestIfAWorkDay()
 }
 ```
 
+### Calculate work duration using `TimeSpan`
+```csharp
+//omitted configurations and holidays(Italian Holidays)...
+var utility = new WorkingDaysAndTimeUtility(week, italiansHoliDays);
+var start = new DateTime(2023, 1, 27, 9, 30, 0);	
+var end = new DateTime(2023, 1, 31, 11, 00, 0);
+TimeSpan workedTime = TimeSpan.FromSeconds(0);
+	
+while (start < end)
+{
+	start = utility.AddWorkingMinutes(start, 1);
+	workedTime += TimeSpan.FromMinutes(1);	
+}
+	
+Console.WriteLine($"Worked 'TimeSpan' between start and end: {workedTime}");
+
+```
+
 ### Split Worked Time
 ```c#
  public static TimeSlotConfig GetTimeSlotConfig()
