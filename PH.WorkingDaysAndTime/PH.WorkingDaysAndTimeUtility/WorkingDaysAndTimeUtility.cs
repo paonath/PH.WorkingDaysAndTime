@@ -797,11 +797,11 @@ namespace PH.WorkingDaysAndTimeUtility
         private bool CheckIfWorkTime(DateTime d, out WorkTimeSpan nextInterval)
         {
             var workDaySpan = WorkWeekConfiguration.WorkDays[d.DayOfWeek];
-            var nextOutSpan    = WorkWeekConfiguration.WorkDays.Where(x => x.Key > d.DayOfWeek).Select(x => x.Value).FirstOrDefault();
-            if (null == nextOutSpan)
-            {
-	            nextOutSpan = WorkWeekConfiguration.WorkDays.FirstOrDefault().Value;
-            }
+            //var nextOutSpan    = WorkWeekConfiguration.WorkDays.Where(x => x.Key > d.DayOfWeek).Select(x => x.Value).FirstOrDefault();
+            //if (null == nextOutSpan)
+            //{
+	           // nextOutSpan = WorkWeekConfiguration.WorkDays.FirstOrDefault().Value;
+            //}
 
             bool r           = false;
             nextInterval = null;
@@ -831,7 +831,8 @@ namespace PH.WorkingDaysAndTimeUtility
 			            else
 			            {
 				            nextInterval = ts;
-			            }
+                            return false;
+                        }
 		            }
 
 		           
