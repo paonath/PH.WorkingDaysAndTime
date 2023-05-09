@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
 	<Authors>Paolo Innocenti</Authors>
-	<Copyright>Copyright 2022 (c) Paolo Innocenti - paonath@gmail.com </Copyright>    
-	<AssemblyVersion>2.0.11</AssemblyVersion>
-    <FileVersion>2.0.11</FileVersion>
-    <Version>2.0.11</Version>
+	<Copyright>Copyright $([System.DateTime]::UtcNow.ToString("yyyy")) (c) Paolo Innocenti - paonath@gmail.com </Copyright>
+	<AssemblyVersion>2.0.12</AssemblyVersion>
+    <FileVersion>2.0.12</FileVersion>
+    <Version>2.0.12</Version>
   </PropertyGroup>
 </Project>
 
