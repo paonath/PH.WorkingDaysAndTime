@@ -85,6 +85,35 @@ namespace PH.WorkingDaysAndTimeUtility.UnitTest
             Assert.Equal(new DateTime(2023,1,18,14,30,22), result);
 		}
 
+        [Fact]
+        public void TestingIssue2()
+        {
+            var wts1a = new WorkTimeSpan() { Start = new TimeSpan(5, 45, 0), End  = new TimeSpan(10, 0, 0) };
+            var wts1b = new WorkTimeSpan() { Start = new TimeSpan(10, 15, 0), End = new TimeSpan(13, 59, 59) };
+            var wts2a = new WorkTimeSpan() { Start = new TimeSpan(14, 0, 0), End  = new TimeSpan(19, 0, 0) };
+            var wts2b = new WorkTimeSpan() { Start = new TimeSpan(19, 15, 0), End = new TimeSpan(22, 15, 0) };
+            var wts   = new List<WorkTimeSpan>() { wts1a, wts1b, wts2a, wts2b };
+
+            var week = new WeekDaySpan()
+            {
+                WorkDays = new Dictionary<DayOfWeek, WorkDaySpan>()
+                {
+                    { DayOfWeek.Monday, new WorkDaySpan() { TimeSpans    = wts } },
+                    { DayOfWeek.Tuesday, new WorkDaySpan() { TimeSpans   = wts } },
+                    { DayOfWeek.Wednesday, new WorkDaySpan() { TimeSpans = wts } },
+                    { DayOfWeek.Thursday, new WorkDaySpan() { TimeSpans  = wts } },
+                    { DayOfWeek.Friday, new WorkDaySpan() { TimeSpans    = wts } },
+                }
+            };
+            var holiDays = new List<AHolyDay>();
+            var utility  = new WorkingDaysAndTimeUtility(week, holiDays);
+
+            var dateTime = new DateTime(2023, 3, 31, 17, 0, 0);
+            var timeSpan = new TimeSpan(13, 0, 0);
+            var result   = utility.AddWorkingTimeSpan(dateTime, timeSpan);
+
+            Assert.Equal(new DateTime(2023, 4, 3, 14, 0, 0), result);
+        }
 	}
 
 	public class WorkingDaysAndTimeUtilityUnitTest
