@@ -22,7 +22,7 @@
     
     <PackageTags>work-days,DateTime,work-hours,work-minutes,work-DateTime,holiday,timespan, time-slices, holiday</PackageTags>
 
-    <PackageVersion>2.0.12</PackageVersion>
+    <PackageVersion>2.0.13</PackageVersion>
    
 
     <Authors>Paolo Innocenti</Authors>
