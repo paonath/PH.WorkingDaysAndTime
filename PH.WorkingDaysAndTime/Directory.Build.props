@@ -2,9 +2,9 @@
   <PropertyGroup>
 	<Authors>Paolo Innocenti</Authors>
 	<Copyright>Copyright $([System.DateTime]::UtcNow.ToString("yyyy")) (c) Paolo Innocenti - paonath@gmail.com </Copyright>
-	<AssemblyVersion>2.0.12</AssemblyVersion>
-    <FileVersion>2.0.12</FileVersion>
-    <Version>2.0.12</Version>
+	<AssemblyVersion>2.0.13</AssemblyVersion>
+    <FileVersion>2.0.13</FileVersion>
+    <Version>2.0.13</Version>
   </PropertyGroup>
 </Project>
 
